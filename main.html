@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Marmori — Luxury Marble Furniture</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- AOS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        /* ── Custom overrides ── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #fcf9f6;
+            color: #1e1e1e;
+            overflow-x: hidden;
+        }
+
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* ── Navbar glass ── */
+        .navbar-glass {
+            background: rgba(252, 249, 246, 0.6);
+            backdrop-filter: blur(18px) saturate(180%);
+            -webkit-backdrop-filter: blur(18px) saturate(180%);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease;
+        }
+
+        .navbar-glass.scrolled {
+            background: rgba(252, 249, 246, 0.92);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.04);
+        }
+
+        /* ── Glass card ── */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        /* ── Product card hover ── */
+        .product-card .product-image {
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+        .product-card .overlay-badge {
+            transition: opacity 0.3s ease;
+        }
+
+        /* ── Category tile hover ── */
+        .category-tile .cat-overlay {
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .category-tile:hover .cat-overlay {
+            opacity: 1;
+        }
+        .category-tile .cat-image {
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .category-tile:hover .cat-image {
+            transform: scale(1.06);
+        }
+
+        /* ── Marble carousel ── */
+        .marble-track {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .marble-item {
+            flex: 0 0 20%;
+            min-width: 180px;
+        }
+        @media (max-width: 768px) {
+            .marble-item {
+                flex: 0 0 40%;
+                min-width: 140px;
+            }
+        }
+        @media (max-width: 480px) {
+            .marble-item {
+                flex: 0 0 60%;
+                min-width: 120px;
+            }
+        }
+
+        /* ── Cart drawer ── */
+        .cart-drawer {
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .cart-drawer.open {
+            transform: translateX(0);
+        }
+        .cart-overlay {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .cart-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* ── Accordion ── */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s ease;
+        }
+        .accordion-content.open {
+            max-height: 500px;
+            padding-top: 0.75rem;
+        }
+        .accordion-btn .fa-chevron-down {
+            transition: transform 0.3s ease;
+        }
+        .accordion-btn.active .fa-chevron-down {
+            transform: rotate(180deg);
+        }
+
+        /* ── Quantity ── */
+        .qty-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid #d4d0cb;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            font-size: 16px;
+            color: #1e1e1e;
+        }
+        .qty-btn:hover {
+            background: #1e1e1e;
+            color: #fff;
+            border-color: #1e1e1e;
+        }
+        .qty-input {
+            width: 48px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 500;
+            border: none;
+            background: transparent;
+            outline: none;
+        }
+
+        /* ── Scroll to top ── */
+        .scroll-top {
+            position: fixed;
+            bottom: 100px;
+            right: 28px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #1e1e1e;
+            color: #fff;
+            border: none;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+            z-index: 40;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .scroll-top.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .scroll-top:hover {
+            background: #3a3a3a;
+            transform: scale(1.05);
+        }
+
+        /* ── WhatsApp ── */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 50;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #25d366;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            box-shadow: 0 8px 30px rgba(37, 211, 102, 0.35);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .whatsapp-float:hover {
+            transform: scale(1.08);
+            box-shadow: 0 12px 40px rgba(37, 211, 102, 0.45);
+        }
+
+        /* ── Scroll indicator ── */
+        .scroll-indicator {
+            animation: bounceDown 2.2s infinite;
+        }
+        @keyframes bounceDown {
+            0%,
+            100% {
+                transform: translateY(0);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translateY(10px);
+                opacity: 1;
+            }
+        }
+
+        /* ── Hero overlay ── */
+        .hero-overlay {
+            background: linear-gradient(180deg, rgba(30, 30, 30, 0.15) 0%, rgba(30, 30, 30, 0.55) 100%);
+        }
+
+        /* ── Misc ── */
+        .accent-sage {
+            color: #7a9b8c;
+        }
+        .bg-accent-sage {
+            background: #7a9b8c;
+        }
+        .border-accent-sage {
+            border-color: #7a9b8c;
+        }
+        .hover\:bg-accent-sage:hover {
+            background: #6a8b7c;
+        }
+
+        .text-gold {
+            color: #b8944a;
+        }
+        .bg-gold {
+            background: #b8944a;
+        }
+
+        .badge-sale {
+            background: #c0392b;
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.2rem 0.7rem;
+            border-radius: 20px;
+            letter-spacing: 0.03em;
+        }
+        .badge-save {
+            background: #7a9b8c;
+            color: #fff;
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 0.15rem 0.6rem;
+            border-radius: 20px;
+        }
+
+        .trust-icon {
+            font-size: 28px;
+            color: #7a9b8c;
+        }
+
+        /* ── Skeleton loader ── */
+        .skeleton {
+            background: #e8e4df;
+            border-radius: 8px;
+            animation: pulse 1.6s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 0.6;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* ── Mobile menu ── */
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+
+        /* ── Product detail modal ── */
+        .detail-modal {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s ease;
+        }
+        .detail-modal.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .detail-modal .modal-content {
+            transform: scale(0.95) translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .detail-modal.open .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        /* ── Utility ── */
+        .truncate-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* ── Responsive tweaks ── */
+        @media (max-width: 640px) {
+            .hero-title {
+                font-size: 2.4rem;
+                line-height: 1.15;
+            }
+            .hero-sub {
+                font-size: 1rem;
+            }
+            .whatsapp-float {
+                width: 52px;
+                height: 52px;
+                font-size: 26px;
+                bottom: 20px;
+                right: 20px;
+            }
+            .scroll-top {
+                bottom: 88px;
+                right: 20px;
+                width: 42px;
+                height: 42px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ─── NAVBAR ─── -->
+    <header id="navbar" class="navbar-glass fixed top-0 left-0 w-full z-50 px-4 md:px-8 py-3 transition-all duration-300">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <!-- Left: hamburger + search (mobile) -->
+            <div class="flex items-center gap-3 md:hidden">
+                <button id="menuToggle" class="text-2xl text-[#1e1e1e] hover:text-[#7a9b8c] transition" aria-label="Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <button id="searchToggleMobile" class="text-lg text-[#1e1e1e] hover:text-[#7a9b8c] transition" aria-label="Search">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+
+            <!-- Logo (centered) -->
+            <a href="#" class="font-serif text-2xl md:text-3xl font-bold tracking-wide text-[#1e1e1e]">
+                M A R M O R I
+            </a>
+
+            <!-- Desktop nav links -->
+            <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-[#2a2a2a]">
+                <a href="#" class="hover:text-[#7a9b8c] transition">Home</a>
+                <div class="relative group">
+                    <button class="flex items-center gap-1 hover:text-[#7a9b8c] transition">
+                        Collections <i class="fas fa-chevron-down text-[10px] ml-0.5"></i>
+                    </button>
+                    <div class="absolute left-0 top-full pt-2 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-all duration-200">
+                        <div class="bg-white/90 backdrop-blur-md shadow-xl rounded-xl p-3 min-w-[180px] border border-white/40">
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-[#f0ede8] rounded-lg transition">Side Tables</a>
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-[#f0ede8] rounded-lg transition">Vases</a>
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-[#f0ede8] rounded-lg transition">Candle Holders</a>
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-[#f0ede8] rounded-lg transition">Trays</a>
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-[#f0ede8] rounded-lg transition">Tissue Holders</a>
+                        </div>
+                    </div>
+                </div>
+                <a href="#" class="hover:text-[#7a9b8c] transition">Shop All</a>
+                <a href="#" class="hover:text-[#7a9b8c] transition">Bestseller</a>
+                <a href="#" class="hover:text-[#7a9b8c] transition">About</a>
+                <a href="#" class="hover:text-[#7a9b8c] transition">Bulk Enquiry</a>
+                <a href="#" class="hover:text-[#7a9b8c] transition">Customize</a>
+                <a href="#" class="text-[#c0392b] font-semibold hover:text-[#a03226] transition">Sale</a>
+            </nav>
+
+            <!-- Right: search + cart -->
+            <div class="flex items-center gap-4">
+                <button id="searchToggle" class="hidden md:block text-[#1e1e1e] hover:text-[#7a9b8c] transition text-lg" aria-label="Search">
+                    <i class="fas fa-search"></i>
+                </button>
+                <button id="cartToggle" class="relative text-[#1e1e1e] hover:text-[#7a9b8c] transition text-xl" aria-label="Cart">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span id="cartCount" class="absolute -top-1.5 -right-2.5 bg-[#7a9b8c] text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                </button>
+                <button id="loginToggle" class="hidden md:flex items-center gap-1.5 text-sm font-medium text-[#1e1e1e] hover:text-[#7a9b8c] transition">
+                    <i class="fas fa-user"></i>
+                    <span>Login</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ─── MOBILE MENU ─── -->
+    <div id="mobileMenu" class="mobile-menu fixed top-0 right-0 h-full w-72 bg-white/95 backdrop-blur-xl shadow-2xl z-50 p-6 overflow-y-auto border-l border-white/40">
+        <div class="flex justify-between items-center mb-8">
+            <span class="font-serif text-xl font-bold">MARMORI</span>
+            <button id="closeMenu" class="text-2xl text-[#1e1e1e] hover:text-[#7a9b8c] transition">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <nav class="flex flex-col gap-4 text-base font-medium">
+            <a href="#" class="hover:text-[#7a9b8c] transition py-1 border-b border-[#f0ede8]">Home</a>
+            <a href="#" class="hover:text-[#7a9b8c] transition py-1 border-b border-[#f0ede8]">Collections</a>
+            <a href="#" class="hover:text-[#7a9b8c] transition py-1 border-b border-[#f0ede8]">Shop All</a>
+            <a href="#" class="hover:text-[#7a9b8c] transition py-1 border-b border-[#f0ede8]">Bestseller</a>
+            <a href="#" class="hover:text-[#7a9b8c] transition py-1 border-b border-[#f0ede8]">About Us</a>
+            <a href="#" class="hover:text-[#7a9b8c] transition py-1 border-b border-[#f0ede8]">Bulk Enquiry</a>
+            <a href="#" class="hover:text-[#7a9b8c] transition py-1 border-b border-[#f0ede8]">Customize</a>
+            <a href="#" class="text-[#c0392b] font-semibold hover:text-[#a03226] transition py-1 border-b border-[#f0ede8]">Sale</a>
+            <a href="#" class="hover:text-[#7a9b8c] transition py-1 border-b border-[#f0ede8]">Login</a>
+        </nav>
+        <div class="mt-8 pt-4 border-t border-[#f0ede8]">
+            <p class="text-sm text-[#6b6b6b]">© 2026 Marmori. All rights reserved.</p>
+        </div>
+    </div>
+
+    <!-- ─── CART DRAWER ─── -->
+    <div id="cartOverlay" class="cart-overlay fixed inset-0 bg-black/30 z-50"></div>
+    <div id="cartDrawer" class="cart-drawer fixed top-0 right-0 h-full w-full max-w-md bg-white/95 backdrop-blur-xl shadow-2xl z-50 p-6 overflow-y-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="font-serif text-2xl font-semibold">Your Cart</h2>
+            <button id="closeCart" class="text-2xl text-[#1e1e1e] hover:text-[#7a9b8c] transition">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="cartItems" class="space-y-4">
+            <!-- Cart items will be injected here -->
+            <p class="text-[#6b6b6b] text-sm">Your cart is empty.</p>
+        </div>
+        <div id="cartFooter" class="hidden mt-6 pt-4 border-t border-[#f0ede8]">
+            <div class="flex justify-between font-semibold text-lg">
+                <span>Total</span>
+                <span id="cartTotal">$0.00</span>
+            </div>
+            <button class="w-full mt-4 bg-[#1e1e1e] text-white py-3 rounded-full font-medium hover:bg-[#3a3a3a] transition text-sm">
+                Checkout
+            </button>
+        </div>
+    </div>
+
+    <!-- ─── PRODUCT DETAIL MODAL ─── -->
+    <div id="detailModal" class="detail-modal fixed inset-0 z-[60] bg-black/40 flex items-center justify-center p-4">
+        <div class="modal-content bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 relative">
+            <button id="closeDetail" class="absolute top-4 right-4 text-2xl text-[#1e1e1e] hover:text-[#7a9b8c] transition">
+                <i class="fas fa-times"></i>
+            </button>
+            <div id="detailContent" class="grid md:grid-cols-2 gap-8">
+                <!-- Image -->
+                <div>
+                    <img id="detailImage" src="" alt="" class="w-full rounded-xl object-cover aspect-[4/5]" />
+                    <div class="flex gap-2 mt-3">
+                        <img src="" alt="" class="w-16 h-20 rounded-md object-cover border-2 border-transparent hover:border-[#7a9b8c] cursor-pointer transition" />
+                        <img src="" alt="" class="w-16 h-20 rounded-md object-cover border-2 border-transparent hover:border-[#7a9b8c] cursor-pointer transition" />
+                        <img src="" alt="" class="w-16 h-20 rounded-md object-cover border-2 border-transparent hover:border-[#7a9b8c] cursor-pointer transition" />
+                    </div>
+                </div>
+                <!-- Info -->
+                <div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="badge-sale" id="detailBadge">Sale</span>
+                        <span class="badge-save" id="detailSave">Save 25%</span>
+                    </div>
+                    <h2 id="detailName" class="font-serif text-3xl font-semibold">Product Name</h2>
+                    <div class="flex items-center gap-3 mt-2">
+                        <span id="detailPrice" class="text-2xl font-bold">$2,999</span>
+                        <span id="detailOriginal" class="text-lg text-[#a0a0a0] line-through">$3,999</span>
+                    </div>
+                    <!-- Quantity -->
+                    <div class="flex items-center gap-3 mt-4">
+                        <span class="text-sm font-medium">Qty</span>
+                        <button class="qty-btn" id="detailQtyMinus">−</button>
+                        <input type="text" id="detailQtyInput" class="qty-input" value="1" readonly />
+                        <button class="qty-btn" id="detailQtyPlus">+</button>
+                    </div>
+                    <!-- Buttons -->
+                    <div class="flex flex-wrap gap-3 mt-5">
+                        <button id="detailAddCart" class="flex-1 min-w-[140px] border-2 border-[#1e1e1e] text-[#1e1e1e] py-3 rounded-full font-medium hover:bg-[#1e1e1e] hover:text-white transition text-sm">
+                            Add to Cart
+                        </button>
+                        <button class="flex-1 min-w-[140px] bg-[#1e1e1e] text-white py-3 rounded-full font-medium hover:bg-[#3a3a3a] transition text-sm">
+                            Buy It Now
+                        </button>
+                    </div>
+                    <!-- Accordions -->
+                    <div class="mt-6 space-y-2">
+                        <div class="border-b border-[#f0ede8]">
+                            <button class="accordion-btn flex justify-between w-full py-3 text-left font-medium text-sm hover:text-[#7a9b8c] transition">
+                                Description <i class="fas fa-chevron-down text-xs"></i>
+                            </button>
+                            <div class="accordion-content text-sm text-[#4a4a4a] leading-relaxed">
+                                <p id="detailDesc">Crafted from premium Italian marble, this piece brings timeless elegance to any space.</p>
+                            </div>
+                        </div>
+                        <div class="border-b border-[#f0ede8]">
+                            <button class="accordion-btn flex justify-between w-full py-3 text-left font-medium text-sm hover:text-[#7a9b8c] transition">
+                                Dimensions <i class="fas fa-chevron-down text-xs"></i>
+                            </button>
+                            <div class="accordion-content text-sm text-[#4a4a4a]">
+                                <p id="detailDims">45cm × 45cm × 50cm</p>
+                            </div>
+                        </div>
+                        <div class="border-b border-[#f0ede8]">
+                            <button class="accordion-btn flex justify-between w-full py-3 text-left font-medium text-sm hover:text-[#7a9b8c] transition">
+                                Additional Information <i class="fas fa-chevron-down text-xs"></i>
+                            </button>
+                            <div class="accordion-content text-sm text-[#4a4a4a]">
+                                <p id="detailAddInfo">Hand-finished with natural wax. Each piece is unique due to natural veining.</p>
+                            </div>
+                        </div>
+                        <div class="border-b border-[#f0ede8]">
+                            <button class="accordion-btn flex justify-between w-full py-3 text-left font-medium text-sm hover:text-[#7a9b8c] transition">
+                                Customisation <i class="fas fa-chevron-down text-xs"></i>
+                            </button>
+                            <div class="accordion-content text-sm text-[#4a4a4a]">
+                                <p>Available in custom sizes and finishes. Contact our team for bespoke orders.</p>
+                            </div>
+                        </div>
+                        <div>
+                            <button class="accordion-btn flex justify-between w-full py-3 text-left font-medium text-sm hover:text-[#7a9b8c] transition">
+                                Care Instructions <i class="fas fa-chevron-down text-xs"></i>
+                            </button>
+                            <div class="accordion-content text-sm text-[#4a4a4a]">
+                                <p id="detailCare">Wipe with a soft, damp cloth. Avoid acidic cleaners. Seal annually.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ─── HERO ─── -->
+    <section class="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 bg-[#1e1e1e]">
+            <img
+            src="https://images.unsplash.com/photo-1618220179428-22790b461013?w=1400&q=80"
+            alt="Luxury marble interior"
+            class="w-full h-full object-cover opacity-80"
+            loading="eager"
+            />
+            <div class="hero-overlay absolute inset-0"></div>
+        </div>
+        <div class="relative z-10 text-center text-white px-4 max-w-3xl" data-aos="fade-up" data-aos-duration="1000">
+            <h1 class="font-serif text-4xl md:text-6xl lg:text-7xl font-bold leading-tight">
+                Where Stone<br />Becomes Art
+            </h1>
+            <p class="mt-4 text-base md:text-lg text-white/80 font-light tracking-wide max-w-xl mx-auto">
+                Handcrafted marble furniture &amp; decor — each piece a timeless statement of nature’s beauty.
+            </p>
+            <a href="#" class="inline-block mt-8 bg-white/10 backdrop-blur-sm border border-white/30 text-white px-8 py-3.5 rounded-full font-medium hover:bg-white hover:text-[#1e1e1e] transition-all duration-300 text-sm tracking-wide">
+                Explore Collection
+            </a>
+        </div>
+        <!-- Scroll indicator -->
+        <div class="scroll-indicator absolute bottom-8 left-1/2 -translate-x-1/2 text-white/60 flex flex-col items-center gap-1 text-sm font-light tracking-widest">
+            <span>SCROLL</span>
+            <i class="fas fa-chevron-down text-xs"></i>
+        </div>
+    </section>
+
+    <!-- ─── BESTSELLERS ─── -->
+    <section class="py-16 md:py-24 px-4 max-w-7xl mx-auto">
+        <div class="flex justify-between items-end mb-10" data-aos="fade-up">
+            <div>
+                <span class="text-sm font-medium text-[#7a9b8c] tracking-widest uppercase">Curated</span>
+                <h2 class="font-serif text-3xl md:text-4xl font-semibold mt-1">Bestsellers</h2>
+            </div>
+            <a href="#" class="text-sm font-medium text-[#1e1e1e] hover:text-[#7a9b8c] transition flex items-center gap-1">
+                View All <i class="fas fa-arrow-right text-xs"></i>
+            </a>
+        </div>
+        <div id="bestsellerGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Injected by JS -->
+        </div>
+    </section>
+
+    <!-- ─── SHOP BY CATEGORY ─── -->
+    <section class="py-16 md:py-24 px-4 bg-[#f5f2ed]">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-sm font-medium text-[#7a9b8c] tracking-widest uppercase">Explore</span>
+                <h2 class="font-serif text-3xl md:text-4xl font-semibold mt-1">Shop by Category</h2>
+            </div>
+            <div id="categoryGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
+                <!-- Injected by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── TYPES OF MARBLE ─── -->
+    <section class="py-16 md:py-24 px-4 max-w-7xl mx-auto overflow-hidden">
+        <div class="flex justify-between items-end mb-10" data-aos="fade-up">
+            <div>
+                <span class="text-sm font-medium text-[#7a9b8c] tracking-widest uppercase">Materials</span>
+                <h2 class="font-serif text-3xl md:text-4xl font-semibold mt-1">Types of Marble</h2>
+            </div>
+            <div class="flex gap-2">
+                <button id="marblePrev" class="w-10 h-10 rounded-full border border-[#d4d0cb] hover:bg-[#1e1e1e] hover:text-white hover:border-[#1e1e1e] transition flex items-center justify-center">
+                    <i class="fas fa-chevron-left text-sm"></i>
+                </button>
+                <button id="marbleNext" class="w-10 h-10 rounded-full border border-[#d4d0cb] hover:bg-[#1e1e1e] hover:text-white hover:border-[#1e1e1e] transition flex items-center justify-center">
+                    <i class="fas fa-chevron-right text-sm"></i>
+                </button>
+            </div>
+        </div>
+        <div class="relative overflow-hidden" data-aos="fade-up">
+            <div id="marbleTrack" class="marble-track gap-4">
+                <!-- Injected by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── ABOUT / CRAFTSMANSHIP ─── -->
+    <section class="py-16 md:py-24 px-4 bg-[#1e1e1e] text-white">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+            <div data-aos="fade-right">
+                <span class="text-sm font-medium text-[#7a9b8c] tracking-widest uppercase">Craftsmanship</span>
+                <h2 class="font-serif text-3xl md:text-4xl font-semibold mt-2 leading-tight">
+                    Carved by Hand,<br />Made to Last
+                </h2>
+                <p class="mt-4 text-white/70 leading-relaxed text-sm md:text-base">
+                    Every piece of Marmori furniture is handcrafted by master artisans in our workshop. We source only the finest natural stone — from Italian Carrara to Portuguese Rosa — and treat each block with the reverence it deserves. No mass production. No compromise.
+                </p>
+                <div class="mt-6 grid grid-cols-2 gap-4">
+                    <div>
+                        <span class="text-2xl font-serif font-bold text-[#7a9b8c]">200+</span>
+                        <p class="text-xs text-white/50">Years of combined experience</p>
+                    </div>
+                    <div>
+                        <span class="text-2xl font-serif font-bold text-[#7a9b8c]">100%</span>
+                        <p class="text-xs text-white/50">Natural stone, no composites</p>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3" data-aos="fade-left">
+                <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&q=80" alt="Craftsmanship" class="rounded-xl w-full h-48 object-cover" />
+                <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=400&q=80" alt="Workshop" class="rounded-xl w-full h-48 object-cover mt-6" />
+                <img src="https://images.unsplash.com/photo-1618220179428-22790b461013?w=400&q=80" alt="Marble" class="rounded-xl w-full h-48 object-cover -mt-6" />
+                <img src="https://images.unsplash.com/photo-1616137466211-f939a420be84?w=400&q=80" alt="Finished" class="rounded-xl w-full h-48 object-cover" />
+            </div>
+        </div>
+        <!-- Founders -->
+        <div class="max-w-7xl mx-auto mt-16 pt-12 border-t border-white/10">
+            <h3 class="font-serif text-2xl font-semibold text-center mb-10" data-aos="fade-up">Meet the Founders</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                <div class="text-center" data-aos="fade-up" data-aos-delay="0">
+                    <div class="w-24 h-24 rounded-full bg-[#7a9b8c] mx-auto mb-3 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80" alt="Founder" class="w-full h-full object-cover" />
+                    </div>
+                    <h4 class="font-semibold">Elena Rossi</h4>
+                    <p class="text-sm text-white/60">Creative Director</p>
+                </div>
+                <div class="text-center" data-aos="fade-up" data-aos-delay="100">
+                    <div class="w-24 h-24 rounded-full bg-[#7a9b8c] mx-auto mb-3 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80" alt="Founder" class="w-full h-full object-cover" />
+                    </div>
+                    <h4 class="font-semibold">Marco Bianchi</h4>
+                    <p class="text-sm text-white/60">Master Stone Carver</p>
+                </div>
+                <div class="text-center" data-aos="fade-up" data-aos-delay="200">
+                    <div class="w-24 h-24 rounded-full bg-[#7a9b8c] mx-auto mb-3 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=80" alt="Founder" class="w-full h-full object-cover" />
+                    </div>
+                    <h4 class="font-semibold">Sophia Chen</h4>
+                    <p class="text-sm text-white/60">Head of Design</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── TESTIMONIALS / TRUST BADGES ─── -->
+    <section class="py-16 md:py-20 px-4 max-w-6xl mx-auto">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center" data-aos="fade-up">
+            <div class="flex flex-col items-center">
+                <i class="fas fa-gem trust-icon"></i>
+                <p class="font-semibold mt-2 text-sm">100% Natural Stone</p>
+                <p class="text-xs text-[#6b6b6b]">No resins or fillers</p>
+            </div>
+            <div class="flex flex-col items-center">
+                <i class="fas fa-hands trust-icon"></i>
+                <p class="font-semibold mt-2 text-sm">Handcrafted</p>
+                <p class="text-xs text-[#6b6b6b]">Made by master artisans</p>
+            </div>
+            <div class="flex flex-col items-center">
+                <i class="fas fa-ban trust-icon"></i>
+                <p class="font-semibold mt-2 text-sm">No Mass Production</p>
+                <p class="text-xs text-[#6b6b6b]">Each piece is unique</p>
+            </div>
+            <div class="flex flex-col items-center">
+                <i class="fas fa-leaf trust-icon"></i>
+                <p class="font-semibold mt-2 text-sm">Sustainably Sourced</p>
+                <p class="text-xs text-[#6b6b6b]">Ethical quarries</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── FOOTER ─── -->
+    <footer class="bg-[#1e1e1e] text-white/80 pt-16 pb-6 px-4">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+            <!-- Brand -->
+            <div>
+                <a href="#" class="font-serif text-2xl font-bold text-white">M A R M O R I</a>
+                <p class="mt-3 text-sm text-white/50 leading-relaxed">
+                    Luxury marble furniture &amp; decor, handcrafted in Italy. Timeless design, natural beauty.
+                </p>
+                <div class="flex gap-4 mt-4">
+                    <a href="#" class="text-white/40 hover:text-white transition text-lg"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-white/40 hover:text-white transition text-lg"><i class="fab fa-pinterest"></i></a>
+                    <a href="#" class="text-white/40 hover:text-white transition text-lg"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-white/40 hover:text-white transition text-lg"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <!-- Quick links -->
+            <div>
+                <h4 class="font-semibold text-white text-sm uppercase tracking-wider">Quick Links</h4>
+                <ul class="mt-3 space-y-2 text-sm">
+                    <li><a href="#" class="hover:text-white transition">Shop All</a></li>
+                    <li><a href="#" class="hover:text-white transition">Bestsellers</a></li>
+                    <li><a href="#" class="hover:text-white transition">About Us</a></li>
+                    <li><a href="#" class="hover:text-white transition">Bulk Enquiry</a></li>
+                    <li><a href="#" class="hover:text-white transition">Customize</a></li>
+                </ul>
+            </div>
+            <!-- Collections -->
+            <div>
+                <h4 class="font-semibold text-white text-sm uppercase tracking-wider">Collections</h4>
+                <ul class="mt-3 space-y-2 text-sm">
+                    <li><a href="#" class="hover:text-white transition">Side Tables</a></li>
+                    <li><a href="#" class="hover:text-white transition">Vases</a></li>
+                    <li><a href="#" class="hover:text-white transition">Candle Holders</a></li>
+                    <li><a href="#" class="hover:text-white transition">Trays</a></li>
+                    <li><a href="#" class="hover:text-white transition">Tissue Holders</a></li>
+                </ul>
+            </div>
+            <!-- Newsletter -->
+            <div>
+                <h4 class="font-semibold text-white text-sm uppercase tracking-wider">Newsletter</h4>
+                <p class="mt-2 text-sm text-white/50">Subscribe for new arrivals &amp; exclusive offers.</p>
+                <form class="mt-3 flex flex-col gap-2">
+                    <input type="email" placeholder="Your email" class="bg-white/10 border border-white/10 rounded-full px-4 py-2.5 text-sm text-white placeholder-white/40 focus:outline-none focus:border-[#7a9b8c]" />
+                    <button type="submit" class="bg-[#7a9b8c] text-white py-2.5 rounded-full text-sm font-medium hover:bg-[#6a8b7c] transition">
+                        Subscribe
+                    </button>
+                </form>
+            </div>
+        </div>
+        <!-- Bottom -->
+        <div class="max-w-7xl mx-auto mt-12 pt-6 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/30">
+            <span>© 2026 Marmori. All rights reserved.</span>
+            <div class="flex items-center gap-4 text-lg">
+                <i class="fab fa-cc-visa"></i>
+                <i class="fab fa-cc-mastercard"></i>
+                <i class="fab fa-cc-amex"></i>
+                <i class="fab fa-cc-paypal"></i>
+                <i class="fab fa-cc-apple-pay"></i>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ─── SCROLL TO TOP ─── -->
+    <button id="scrollTop" class="scroll-top" aria-label="Scroll to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- ─── WHATSAPP FLOAT ─── -->
+    <a href="https://wa.me/1234567890?text=Hello%20Marmori%2C%20I%27d%20like%20to%20enquire%20about%20your%20marble%20furniture." target="_blank" class="whatsapp-float" aria-label="Contact us on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- ─── JAVASCRIPT ─── -->
+    <script>
+        // ─── AOS ───
+        AOS.init({ once: true, offset: 40, duration: 700 });
+
+        // ─── DATA ───
+        const products = [{
+            id: 1,
+            name: "Eternal Marble Side Table",
+            price: 2999,
+            originalPrice: 3999,
+            category: "side-tables",
+            image: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=400&q=80",
+            badge: "Sale",
+            save: "25%",
+            desc: "A sculptural side table hand-carved from Italian Carrara marble. Each piece features unique natural veining.",
+            dims: "45cm × 45cm × 50cm",
+            addInfo: "Finished with a matte sealant. Suitable for indoor use only.",
+            care: "Wipe with a soft, damp cloth. Avoid acidic or abrasive cleaners."
+        }, {
+            id: 2,
+            name: "Aurora Marble Vase",
+            price: 1899,
+            originalPrice: 2499,
+            category: "vases",
+            image: "https://images.unsplash.com/photo-1616137466211-f939a420be84?w=400&q=80",
+            badge: "Sale",
+            save: "24%",
+            desc: "An elegant vase with flowing organic form, carved from Portuguese Rosa marble.",
+            dims: "28cm × 18cm × 40cm",
+            addInfo: "Suitable for dried or fresh flowers. Water-resistant interior.",
+            care: "Rinse with water and mild soap. Dry thoroughly."
+        }, {
+            id: 3,
+            name: "Luna Candle Holder (Set of 2)",
+            price: 799,
+            originalPrice: null,
+            category: "candle-holders",
+            image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&q=80",
+            badge: null,
+            save: null,
+            desc: "A pair of minimalist candle holders in black Marquina marble. Designed for taper candles.",
+            dims: "10cm × 10cm × 12cm each",
+            addInfo: "Includes felt pads to protect surfaces.",
+            care: "Wipe with a soft cloth. Avoid prolonged contact with liquids."
+        }, {
+            id: 4,
+            name: "Nova Marble Tray",
+            price: 1299,
+            originalPrice: 1599,
+            category: "trays",
+            image: "https://images.unsplash.com/photo-1618220179428-22790b461013?w=400&q=80",
+            badge: "Sale",
+            save: "19%",
+            desc: "A versatile serving tray in white Carrara marble with brass handles.",
+            dims: "50cm × 30cm × 4cm",
+            addInfo: "Handles are solid brass with anti-tarnish coating.",
+            care: "Hand wash with mild soap. Dry immediately."
+        }, {
+            id: 5,
+            name: "Terra Tissue Holder",
+            price: 549,
+            originalPrice: null,
+            category: "tissue-holders",
+            image: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=400&q=80",
+            badge: null,
+            save: null,
+            desc: "A sleek tissue box cover in dark Emperador marble. Weighted base for stability.",
+            dims: "24cm × 13cm × 9cm",
+            addInfo: "Fits standard tissue boxes. Soft felt lining inside.",
+            care: "Wipe with a soft, dry cloth. Do not submerge in water."
+        }, {
+            id: 6,
+            name: "Celeste Marble Side Table",
+            price: 3499,
+            originalPrice: 4499,
+            category: "side-tables",
+            image: "https://images.unsplash.com/photo-1616137466211-f939a420be84?w=400&q=80",
+            badge: "Sale",
+            save: "22%",
+            desc: "A statement side table with a sculptural base and a polished marble top.",
+            dims: "55cm × 55cm × 45cm",
+            addInfo: "Available in three marble finishes. Custom sizes on request.",
+            care: "Wipe with a soft cloth. Use coasters for hot or wet items."
+        }];
+
+        const categories = [
+            { name: "Side Tables", icon: "fa-table", image: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=300&q=80" },
+            { name: "Vases", icon: "fa-flower", image: "https://images.unsplash.com/photo-1616137466211-f939a420be84?w=300&q=80" },
+            { name: "Candle Holders", icon: "fa-candle", image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=300&q=80" },
+            { name: "Trays", icon: "fa-utensils", image: "https://images.unsplash.com/photo-1618220179428-22790b461013?w=300&q=80" },
+            { name: "Tissue Holders", icon: "fa-box", image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=300&q=80" }
+        ];
+
+        const marbleTypes = [
+            { name: "Italian Carrara", color: "#d4d0cb" },
+            { name: "Portuguese Rosa", color: "#d9b8a8" },
+            { name: "Black Marquina", color: "#2a2a2a" },
+            { name: "Emperador Brown", color: "#6b4c3b" },
+            { name: "Green Guatemala", color: "#5f735c" },
+            { name: "White Statuario", color: "#e8e4df" },
+            { name: "Red Alicante", color: "#b55a4b" },
+            { name: "Grey Saint Laurent", color: "#8a8a8a" }
+        ];
+
+        // ─── STATE ───
+        let cart = [];
+        let marbleIndex = 0;
+        let detailQty = 1;
+        let currentProductId = null;
+
+        // ─── DOM REFS ───
+        const $ = (s) => document.querySelector(s);
+        const $$ = (s) => document.querySelectorAll(s);
+
+        const navbar = $('#navbar');
+        const menuToggle = $('#menuToggle');
+        const closeMenu = $('#closeMenu');
+        const mobileMenu = $('#mobileMenu');
+        const cartToggle = $('#cartToggle');
+        const closeCart = $('#closeCart');
+        const cartDrawer = $('#cartDrawer');
+        const cartOverlay = $('#cartOverlay');
+        const cartItems = $('#cartItems');
+        const cartFooter = $('#cartFooter');
+        const cartTotal = $('#cartTotal');
+        const cartCount = $('#cartCount');
+        const scrollTopBtn = $('#scrollTop');
+        const detailModal = $('#detailModal');
+        const closeDetail = $('#closeDetail');
+        const marbleTrack = $('#marbleTrack');
+        const marblePrev = $('#marblePrev');
+        const marbleNext = $('#marbleNext');
+        const bestsellerGrid = $('#bestsellerGrid');
+        const categoryGrid = $('#categoryGrid');
+
+        // ─── RENDER BESTSELLERS ───
+        function renderBestsellers() {
+            const saleProducts = products.filter(p => p.badge === 'Sale');
+            const display = saleProducts.length ? saleProducts : products.slice(0, 4);
+            bestsellerGrid.innerHTML = display.map((p, idx) => `
+              <div class="product-card group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 cursor-pointer" data-id="${p.id}" data-aos="fade-up" data-aos-delay="${idx * 80}">
+                <div class="relative overflow-hidden bg-[#f5f2ed] aspect-[4/5]">
+                  <img src="${p.image}" alt="${p.name}" class="product-image w-full h-full object-cover" loading="lazy" />
+                  ${p.badge ? `<span class="badge-sale absolute top-3 left-3">${p.badge}</span>` : ''}
+                  ${p.save ? `<span class="badge-save absolute top-3 right-3">Save ${p.save}</span>` : ''}
+                </div>
+                <div class="p-4">
+                  <p class="text-xs text-[#7a9b8c] font-medium uppercase tracking-wider">${p.category.replace('-', ' ')}</p>
+                  <h3 class="font-serif text-lg font-semibold mt-0.5 truncate-2">${p.name}</h3>
+                  <div class="flex items-center gap-2 mt-1.5">
+                    <span class="font-bold text-[#1e1e1e]">$${p.price.toLocaleString()}</span>
+                    ${p.originalPrice ? `<span class="text-sm text-[#a0a0a0] line-through">$${p.originalPrice.toLocaleString()}</span>` : ''}
+                  </div>
+                </div>
+              </div>
+            `).join('');
+
+            // Click → detail modal
+            bestsellerGrid.querySelectorAll('.product-card').forEach(el => {
+                el.addEventListener('click', () => openDetail(parseInt(el.dataset.id)));
+            });
+        }
+
+        // ─── RENDER CATEGORIES ───
+        function renderCategories() {
+            categoryGrid.innerHTML = categories.map((c, idx) => `
+              <div class="category-tile relative rounded-xl overflow-hidden aspect-[4/5] cursor-pointer group" data-aos="fade-up" data-aos-delay="${idx * 60}">
+                <img src="${c.image}" alt="${c.name}" class="cat-image w-full h-full object-cover transition-transform duration-600" loading="lazy" />
+                <div class="cat-overlay absolute inset-0 bg-black/40 flex items-center justify-center">
+                  <span class="text-white font-serif text-lg md:text-xl font-semibold tracking-wide">${c.name}</span>
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                <div class="absolute bottom-4 left-4">
+                  <span class="text-white/90 text-sm font-medium">${c.name}</span>
+                </div>
+              </div>
+            `).join('');
+        }
+
+        // ─── RENDER MARBLE CAROUSEL ───
+        function renderMarble() {
+            const visible = window.innerWidth < 480 ? 2 : window.innerWidth < 768 ? 3 : 5;
+            const total = marbleTypes.length;
+            const maxIndex = Math.max(0, total - visible);
+            marbleIndex = Math.min(marbleIndex, maxIndex);
+            marbleIndex = Math.max(marbleIndex, 0);
+
+            const items = marbleTypes.map((m, i) => `
+              <div class="marble-item flex flex-col items-center gap-2 px-1">
+                <div class="w-full aspect-square rounded-full border-4 border-white shadow-lg" style="background: ${m.color};"></div>
+                <p class="text-sm font-medium text-center">${m.name}</p>
+              </div>
+            `).join('');
+
+            marbleTrack.innerHTML = items;
+            const itemWidth = marbleTrack.querySelector('.marble-item')?.offsetWidth || 180;
+            const gap = 16;
+            const offset = marbleIndex * (itemWidth + gap);
+            marbleTrack.style.transform = `translateX(-${offset}px)`;
+        }
+
+        function marbleSlide(dir) {
+            const visible = window.innerWidth < 480 ? 2 : window.innerWidth < 768 ? 3 : 5;
+            const total = marbleTypes.length;
+            const maxIndex = Math.max(0, total - visible);
+            marbleIndex = Math.min(Math.max(marbleIndex + dir, 0), maxIndex);
+            renderMarble();
+        }
+
+        // ─── CART ───
+        function updateCartUI() {
+            const count = cart.reduce((sum, i) => sum + i.qty, 0);
+            cartCount.textContent = count;
+            if (cart.length === 0) {
+                cartItems.innerHTML = `<p class="text-[#6b6b6b] text-sm">Your cart is empty.</p>`;
+                cartFooter.classList.add('hidden');
+                return;
+            }
+            cartFooter.classList.remove('hidden');
+            let html = '';
+            let total = 0;
+            cart.forEach((item, idx) => {
+                const p = products.find(pr => pr.id === item.id);
+                if (!p) return;
+                const subtotal = p.price * item.qty;
+                total += subtotal;
+                html += `
+                  <div class="flex gap-3 items-center border-b border-[#f0ede8] pb-3">
+                    <img src="${p.image}" alt="${p.name}" class="w-16 h-20 rounded-md object-cover" />
+                    <div class="flex-1">
+                      <h4 class="font-semibold text-sm">${p.name}</h4>
+                      <p class="text-sm font-bold">$${p.price.toLocaleString()}</p>
+                      <div class="flex items-center gap-2 mt-1">
+                        <button class="cart-qty-minus text-xs w-6 h-6 rounded-full border border-[#d4d0cb] hover:bg-[#1e1e1e] hover:text-white transition" data-idx="${idx}">−</button>
+                        <span class="text-sm font-medium w-6 text-center">${item.qty}</span>
+                        <button class="cart-qty-plus text-xs w-6 h-6 rounded-full border border-[#d4d0cb] hover:bg-[#1e1e1e] hover:text-white transition" data-idx="${idx}">+</button>
+                        <button class="cart-remove text-xs text-[#c0392b] hover:text-[#a03226] ml-2" data-idx="${idx}"><i class="fas fa-trash-alt"></i></button>
+                      </div>
+                    </div>
+                  </div>
+                `;
+            });
+            cartItems.innerHTML = html;
+            cartTotal.textContent = `$${total.toLocaleString()}`;
+
+            // Event listeners for cart actions
+            cartItems.querySelectorAll('.cart-qty-minus').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const idx = parseInt(btn.dataset.idx);
+                    if (cart[idx].qty > 1) { cart[idx].qty--; } else { cart.splice(idx, 1); }
+                    updateCartUI();
+                });
+            });
+            cartItems.querySelectorAll('.cart-qty-plus').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const idx = parseInt(btn.dataset.idx);
+                    cart[idx].qty++;
+                    updateCartUI();
+                });
+            });
+            cartItems.querySelectorAll('.cart-remove').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const idx = parseInt(btn.dataset.idx);
+                    cart.splice(idx, 1);
+                    updateCartUI();
+                });
+            });
+        }
+
+        function addToCart(productId, qty = 1) {
+            const existing = cart.find(i => i.id === productId);
+            if (existing) {
+                existing.qty += qty;
+            } else {
+                cart.push({ id: productId, qty });
+            }
+            updateCartUI();
+            // Open cart drawer
+            cartDrawer.classList.add('open');
+            cartOverlay.classList.add('open');
+        }
+
+        // ─── PRODUCT DETAIL MODAL ───
+        function openDetail(id) {
+            const p = products.find(pr => pr.id === id);
+            if (!p) return;
+            currentProductId = id;
+            detailQty = 1;
+
+            const img = document.getElementById('detailImage');
+            img.src = p.image;
+            img.alt = p.name;
+            document.getElementById('detailName').textContent = p.name;
+            document.getElementById('detailPrice').textContent = `$${p.price.toLocaleString()}`;
+            document.getElementById('detailOriginal').textContent = p.originalPrice ? `$${p.originalPrice.toLocaleString()}` : '';
+            document.getElementById('detailOriginal').style.display = p.originalPrice ? 'inline' : 'none';
+            document.getElementById('detailBadge').style.display = p.badge ? 'inline-block' : 'none';
+            document.getElementById('detailBadge').textContent = p.badge || '';
+            document.getElementById('detailSave').style.display = p.save ? 'inline-block' : 'none';
+            document.getElementById('detailSave').textContent = p.save ? `Save ${p.save}` : '';
+            document.getElementById('detailDesc').textContent = p.desc;
+            document.getElementById('detailDims').textContent = p.dims;
+            document.getElementById('detailAddInfo').textContent = p.addInfo || '—';
+            document.getElementById('detailCare').textContent = p.care || '—';
+
+            document.getElementById('detailQtyInput').value = detailQty;
+            detailModal.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDetailModal() {
+            detailModal.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        // ─── NAVBAR SCROLL ───
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const y = window.scrollY;
+            navbar.classList.toggle('scrolled', y > 60);
+            scrollTopBtn.classList.toggle('visible', y > 400);
+            lastScroll = y;
+        });
+
+        // ─── MOBILE MENU ───
+        menuToggle.addEventListener('click', () => mobileMenu.classList.add('open'));
+        closeMenu.addEventListener('click', () => mobileMenu.classList.remove('open'));
+        mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileMenu.classList.remove('open')));
+
+        // ─── CART DRAWER ───
+        cartToggle.addEventListener('click', () => {
+            cartDrawer.classList.toggle('open');
+            cartOverlay.classList.toggle('open');
+        });
+        closeCart.addEventListener('click', () => {
+            cartDrawer.classList.remove('open');
+            cartOverlay.classList.remove('open');
+        });
+        cartOverlay.addEventListener('click', () => {
+            cartDrawer.classList.remove('open');
+            cartOverlay.classList.remove('open');
+        });
+
+        // ─── DETAIL MODAL ───
+        closeDetail.addEventListener('click', closeDetailModal);
+        detailModal.addEventListener('click', (e) => {
+            if (e.target === detailModal) closeDetailModal();
+        });
+
+        // ─── DETAIL QUANTITY ───
+        document.getElementById('detailQtyMinus').addEventListener('click', () => {
+            if (detailQty > 1) { detailQty--;
+                document.getElementById('detailQtyInput').value = detailQty; }
+        });
+        document.getElementById('detailQtyPlus').addEventListener('click', () => {
+            detailQty++;
+            document.getElementById('detailQtyInput').value = detailQty;
+        });
+
+        // ─── DETAIL ADD TO CART ───
+        document.getElementById('detailAddCart').addEventListener('click', () => {
+            if (currentProductId) {
+                addToCart(currentProductId, detailQty);
+                closeDetailModal();
+            }
+        });
+
+        // ─── SCROLL TO TOP ───
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // ─── MARBLE CAROUSEL ───
+        marblePrev.addEventListener('click', () => marbleSlide(-1));
+        marbleNext.addEventListener('click', () => marbleSlide(1));
+        window.addEventListener('resize', () => { renderMarble(); });
+
+        // ─── SEARCH (placeholder) ───
+        document.getElementById('searchToggle').addEventListener('click', () => alert('Search functionality coming soon.'));
+        document.getElementById('searchToggleMobile').addEventListener('click', () => alert('Search functionality coming soon.'));
+
+        // ─── LOGIN (placeholder) ───
+        document.getElementById('loginToggle').addEventListener('click', () => alert('Login / Account page coming soon.'));
+
+        // ─── ACCORDIONS (global) ───
+        document.addEventListener('click', (e) => {
+            const btn = e.target.closest('.accordion-btn');
+            if (!btn) return;
+            const content = btn.nextElementSibling;
+            const isOpen = content.classList.contains('open');
+            // Close siblings within same parent
+            const parent = btn.closest('.space-y-2') || btn.parentElement;
+            parent.querySelectorAll('.accordion-content').forEach(c => {
+                if (c !== content) {
+                    c.classList.remove('open');
+                    c.previousElementSibling?.classList.remove('active');
+                }
+            });
+            content.classList.toggle('open');
+            btn.classList.toggle('active');
+        });
+
+        // ─── INIT ───
+        renderBestsellers();
+        renderCategories();
+        renderMarble();
+        updateCartUI();
+
+        // ─── KEYBOARD: ESC to close modals ───
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeDetailModal();
+                cartDrawer.classList.remove('open');
+                cartOverlay.classList.remove('open');
+                mobileMenu.classList.remove('open');
+            }
+        });
+
+        console.log('🪨 Marmori — Luxury marble furniture brand demo ready.');
+    </script>
+</body>
+</html>
