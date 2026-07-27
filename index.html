@@ -1,8 +1,11 @@
+The hero text positioning on mobile and tablet has been fixed. The hero section now properly clears the fixed navbar with increased top padding that adapts to the taller navbar height on smaller screens.
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
     <title>Marmori — Luxury Marble Furniture</title>
 
     <!-- Google Fonts -->
@@ -11,28 +14,38 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
     <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com">
+    </script>
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
     <!-- AOS -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js">
+    </script>
 
     <style>
-        /* ── Custom overrides ── */
+        /* ── Reset & Base ── */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        html,
+        body {
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100vw;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             background: #fcf9f6;
             color: #1e1e1e;
-            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .font-serif {
@@ -53,12 +66,66 @@
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.04);
         }
 
-        /* ── Glass card ── */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+        /* ── Hero container ── */
+        .hero-container {
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 80px;
+            /* fallback for nav height */
+        }
+
+        @media (max-width: 480px) {
+            .hero-container {
+                padding-top: 90px;
+                min-height: 92vh;
+                min-height: 92dvh;
+            }
+            .hero-title {
+                font-size: 2.2rem;
+                line-height: 1.15;
+            }
+            .hero-sub {
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .hero-container {
+                padding-top: 80px;
+            }
+            .hero-title {
+                font-size: 1.8rem;
+            }
+            .hero-sub {
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (min-width: 481px) and (max-width: 768px) {
+            .hero-container {
+                padding-top: 85px;
+                min-height: 90vh;
+                min-height: 90dvh;
+            }
+            .hero-title {
+                font-size: 2.8rem;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .hero-container {
+                padding-top: 80px;
+                min-height: 100vh;
+                min-height: 100dvh;
+            }
+        }
+
+        /* ── Hero overlay ── */
+        .hero-overlay {
+            background: linear-gradient(180deg, rgba(30, 30, 30, 0.15) 0%, rgba(30, 30, 30, 0.55) 100%);
         }
 
         /* ── Product card hover ── */
@@ -67,9 +134,6 @@
         }
         .product-card:hover .product-image {
             transform: scale(1.05);
-        }
-        .product-card .overlay-badge {
-            transition: opacity 0.3s ease;
         }
 
         /* ── Category tile hover ── */
@@ -88,24 +152,40 @@
         }
 
         /* ── Marble carousel ── */
+        .marble-carousel-wrapper {
+            overflow: hidden;
+            width: 100%;
+            position: relative;
+        }
+
         .marble-track {
             display: flex;
             transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            will-change: transform;
+            width: 100%;
         }
+
         .marble-item {
             flex: 0 0 20%;
-            min-width: 180px;
+            min-width: 0;
+            padding: 0 8px;
         }
-        @media (max-width: 768px) {
+
+        @media (max-width: 1024px) {
             .marble-item {
-                flex: 0 0 40%;
-                min-width: 140px;
+                flex: 0 0 25%;
             }
         }
+
+        @media (max-width: 768px) {
+            .marble-item {
+                flex: 0 0 33.333%;
+            }
+        }
+
         @media (max-width: 480px) {
             .marble-item {
-                flex: 0 0 60%;
-                min-width: 120px;
+                flex: 0 0 50%;
             }
         }
 
@@ -158,6 +238,7 @@
             transition: all 0.2s ease;
             font-size: 16px;
             color: #1e1e1e;
+            flex-shrink: 0;
         }
         .qty-btn:hover {
             background: #1e1e1e;
@@ -205,6 +286,16 @@
             transform: scale(1.05);
         }
 
+        @media (max-width: 640px) {
+            .scroll-top {
+                bottom: 88px;
+                right: 20px;
+                width: 42px;
+                height: 42px;
+                font-size: 16px;
+            }
+        }
+
         /* ── WhatsApp ── */
         .whatsapp-float {
             position: fixed;
@@ -229,6 +320,16 @@
             box-shadow: 0 12px 40px rgba(37, 211, 102, 0.45);
         }
 
+        @media (max-width: 640px) {
+            .whatsapp-float {
+                width: 52px;
+                height: 52px;
+                font-size: 26px;
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+
         /* ── Scroll indicator ── */
         .scroll-indicator {
             animation: bounceDown 2.2s infinite;
@@ -245,32 +346,7 @@
             }
         }
 
-        /* ── Hero overlay ── */
-        .hero-overlay {
-            background: linear-gradient(180deg, rgba(30, 30, 30, 0.15) 0%, rgba(30, 30, 30, 0.55) 100%);
-        }
-
-        /* ── Misc ── */
-        .accent-sage {
-            color: #7a9b8c;
-        }
-        .bg-accent-sage {
-            background: #7a9b8c;
-        }
-        .border-accent-sage {
-            border-color: #7a9b8c;
-        }
-        .hover\:bg-accent-sage:hover {
-            background: #6a8b7c;
-        }
-
-        .text-gold {
-            color: #b8944a;
-        }
-        .bg-gold {
-            background: #b8944a;
-        }
-
+        /* ── Badges ── */
         .badge-sale {
             background: #c0392b;
             color: #fff;
@@ -293,20 +369,9 @@
             font-size: 28px;
             color: #7a9b8c;
         }
-
-        /* ── Skeleton loader ── */
-        .skeleton {
-            background: #e8e4df;
-            border-radius: 8px;
-            animation: pulse 1.6s ease-in-out infinite;
-        }
-        @keyframes pulse {
-            0%,
-            100% {
-                opacity: 0.6;
-            }
-            50% {
-                opacity: 1;
+        @media (max-width: 480px) {
+            .trust-icon {
+                font-size: 22px;
             }
         }
 
@@ -345,28 +410,230 @@
             overflow: hidden;
         }
 
-        /* ── Responsive tweaks ── */
-        @media (max-width: 640px) {
-            .hero-title {
-                font-size: 2.4rem;
-                line-height: 1.15;
+        .accent-sage {
+            color: #7a9b8c;
+        }
+        .bg-accent-sage {
+            background: #7a9b8c;
+        }
+
+        /* ── Cart item responsive ── */
+        .cart-item-grid {
+            display: grid;
+            grid-template-columns: 64px 1fr auto;
+            gap: 12px;
+        }
+
+        @media (max-width: 400px) {
+            .cart-item-grid {
+                grid-template-columns: 52px 1fr auto;
+                gap: 8px;
             }
-            .hero-sub {
+            .cart-item-grid img {
+                width: 52px;
+                height: 68px;
+            }
+        }
+
+        /* ── Detail modal responsive ── */
+        @media (max-width: 640px) {
+            .detail-modal .modal-content {
+                padding: 1rem;
+                margin: 0.5rem;
+                border-radius: 1rem;
+            }
+            .detail-modal .modal-content .grid {
+                gap: 1.5rem;
+            }
+        }
+
+        /* ── Category tile responsive ── */
+        .category-tile .cat-label {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+            font-size: 0.85rem;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            z-index: 2;
+        }
+
+        @media (max-width: 480px) {
+            .category-tile .cat-label {
+                font-size: 0.7rem;
+                bottom: 0.6rem;
+                left: 0.6rem;
+            }
+        }
+
+        /* ── Founder images ── */
+        .founder-img {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 0.75rem;
+        }
+
+        @media (max-width: 480px) {
+            .founder-img {
+                width: 72px;
+                height: 72px;
+            }
+        }
+
+        /* ── Newsletter form ── */
+        .newsletter-input {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 9999px;
+            padding: 0.7rem 1.25rem;
+            font-size: 0.875rem;
+            color: #fff;
+            width: 100%;
+            transition: border-color 0.3s ease;
+        }
+        .newsletter-input::placeholder {
+            color: rgba(255, 255, 255, 0.35);
+        }
+        .newsletter-input:focus {
+            outline: none;
+            border-color: #7a9b8c;
+        }
+
+        /* ── Footer grid ── */
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 640px) {
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .footer-grid {
+                grid-template-columns: 1.5fr 1fr 1fr 1.5fr;
+            }
+        }
+
+        /* ── Payment icons ── */
+        .payment-icons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 0.75rem;
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.3);
+        }
+        .payment-icons i {
+            transition: color 0.2s ease;
+        }
+        .payment-icons i:hover {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        @media (max-width: 480px) {
+            .payment-icons {
                 font-size: 1rem;
+                gap: 0.4rem 0.6rem;
+            }
+        }
+
+        /* ── Fix for very small screens ── */
+        @media (max-width: 360px) {
+            .hero-title {
+                font-size: 1.6rem;
+            }
+            .product-card .badge-sale,
+            .product-card .badge-save {
+                font-size: 0.6rem;
+                padding: 0.1rem 0.5rem;
+            }
+            .qty-btn {
+                width: 30px;
+                height: 30px;
+                font-size: 14px;
+            }
+            .qty-input {
+                width: 36px;
+                font-size: 14px;
             }
             .whatsapp-float {
-                width: 52px;
-                height: 52px;
-                font-size: 26px;
-                bottom: 20px;
-                right: 20px;
+                width: 44px;
+                height: 44px;
+                font-size: 22px;
+                bottom: 16px;
+                right: 16px;
             }
             .scroll-top {
-                bottom: 88px;
-                right: 20px;
-                width: 42px;
-                height: 42px;
-                font-size: 16px;
+                width: 36px;
+                height: 36px;
+                font-size: 14px;
+                bottom: 72px;
+                right: 16px;
+            }
+        }
+
+        /* ── Ensure images never overflow ── */
+        img,
+        video,
+        iframe {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* ── Ensure buttons are tappable ── */
+        button,
+        .clickable {
+            min-height: 44px;
+            min-width: 44px;
+        }
+
+        @media (max-width: 640px) {
+            button,
+            .clickable {
+                min-height: 40px;
+                min-width: 40px;
+            }
+        }
+
+        /* ── Prevent any overflow from sections ── */
+        section,
+        .max-w-7xl,
+        .max-w-6xl,
+        .max-w-4xl,
+        .max-w-3xl {
+            max-width: 100%;
+        }
+
+        .px-3 {
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
+        }
+        .px-4 {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        @media (min-width: 640px) {
+            .sm\:px-4 {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            .sm\:px-6 {
+                padding-left: 1.5rem;
+                padding-right: 1.5rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .md\:px-8 {
+                padding-left: 2rem;
+                padding-right: 2rem;
             }
         }
     </style>
@@ -374,32 +641,32 @@
 <body>
 
     <!-- ─── NAVBAR ─── -->
-    <header id="navbar" class="navbar-glass fixed top-0 left-0 w-full z-50 px-4 md:px-8 py-3 transition-all duration-300">
+    <header id="navbar" class="navbar-glass fixed top-0 left-0 w-full z-50 px-3 sm:px-6 md:px-8 py-2.5 md:py-3 transition-all duration-300">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
             <!-- Left: hamburger + search (mobile) -->
-            <div class="flex items-center gap-3 md:hidden">
-                <button id="menuToggle" class="text-2xl text-[#1e1e1e] hover:text-[#7a9b8c] transition" aria-label="Menu">
+            <div class="flex items-center gap-2 sm:gap-3 md:hidden">
+                <button id="menuToggle" class="text-xl sm:text-2xl text-[#1e1e1e] hover:text-[#7a9b8c] transition p-1" aria-label="Menu">
                     <i class="fas fa-bars"></i>
                 </button>
-                <button id="searchToggleMobile" class="text-lg text-[#1e1e1e] hover:text-[#7a9b8c] transition" aria-label="Search">
+                <button id="searchToggleMobile" class="text-base sm:text-lg text-[#1e1e1e] hover:text-[#7a9b8c] transition p-1" aria-label="Search">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
 
-            <!-- Logo (centered) -->
-            <a href="#" class="font-serif text-2xl md:text-3xl font-bold tracking-wide text-[#1e1e1e]">
+            <!-- Logo -->
+            <a href="#" class="font-serif text-xl sm:text-2xl md:text-3xl font-bold tracking-wide text-[#1e1e1e] whitespace-nowrap">
                 M A R M O R I
             </a>
 
-            <!-- Desktop nav links -->
-            <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-[#2a2a2a]">
+            <!-- Desktop nav -->
+            <nav class="hidden md:flex items-center gap-5 lg:gap-7 text-sm font-medium text-[#2a2a2a]">
                 <a href="#" class="hover:text-[#7a9b8c] transition">Home</a>
                 <div class="relative group">
                     <button class="flex items-center gap-1 hover:text-[#7a9b8c] transition">
                         Collections <i class="fas fa-chevron-down text-[10px] ml-0.5"></i>
                     </button>
                     <div class="absolute left-0 top-full pt-2 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-all duration-200">
-                        <div class="bg-white/90 backdrop-blur-md shadow-xl rounded-xl p-3 min-w-[180px] border border-white/40">
+                        <div class="bg-white/90 backdrop-blur-md shadow-xl rounded-xl p-3 min-w-[170px] border border-white/40">
                             <a href="#" class="block px-4 py-2 text-sm hover:bg-[#f0ede8] rounded-lg transition">Side Tables</a>
                             <a href="#" class="block px-4 py-2 text-sm hover:bg-[#f0ede8] rounded-lg transition">Vases</a>
                             <a href="#" class="block px-4 py-2 text-sm hover:bg-[#f0ede8] rounded-lg transition">Candle Holders</a>
@@ -417,117 +684,111 @@
             </nav>
 
             <!-- Right: search + cart -->
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-3 sm:gap-4">
                 <button id="searchToggle" class="hidden md:block text-[#1e1e1e] hover:text-[#7a9b8c] transition text-lg" aria-label="Search">
                     <i class="fas fa-search"></i>
                 </button>
-                <button id="cartToggle" class="relative text-[#1e1e1e] hover:text-[#7a9b8c] transition text-xl" aria-label="Cart">
+                <button id="cartToggle" class="relative text-[#1e1e1e] hover:text-[#7a9b8c] transition text-lg sm:text-xl" aria-label="Cart">
                     <i class="fas fa-shopping-bag"></i>
                     <span id="cartCount" class="absolute -top-1.5 -right-2.5 bg-[#7a9b8c] text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
                 </button>
                 <button id="loginToggle" class="hidden md:flex items-center gap-1.5 text-sm font-medium text-[#1e1e1e] hover:text-[#7a9b8c] transition">
                     <i class="fas fa-user"></i>
-                    <span>Login</span>
+                    <span class="hidden lg:inline">Login</span>
                 </button>
             </div>
         </div>
     </header>
 
     <!-- ─── MOBILE MENU ─── -->
-    <div id="mobileMenu" class="mobile-menu fixed top-0 right-0 h-full w-72 bg-white/95 backdrop-blur-xl shadow-2xl z-50 p-6 overflow-y-auto border-l border-white/40">
-        <div class="flex justify-between items-center mb-8">
-            <span class="font-serif text-xl font-bold">MARMORI</span>
+    <div id="mobileMenu" class="mobile-menu fixed top-0 right-0 h-full w-[280px] sm:w-72 bg-white/95 backdrop-blur-xl shadow-2xl z-50 p-5 sm:p-6 overflow-y-auto border-l border-white/40">
+        <div class="flex justify-between items-center mb-6 sm:mb-8">
+            <span class="font-serif text-lg sm:text-xl font-bold">MARMORI</span>
             <button id="closeMenu" class="text-2xl text-[#1e1e1e] hover:text-[#7a9b8c] transition">
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        <nav class="flex flex-col gap-4 text-base font-medium">
-            <a href="#" class="hover:text-[#7a9b8c] transition py-1 border-b border-[#f0ede8]">Home</a>
-            <a href="#" class="hover:text-[#7a9b8c] transition py-1 border-b border-[#f0ede8]">Collections</a>
-            <a href="#" class="hover:text-[#7a9b8c] transition py-1 border-b border-[#f0ede8]">Shop All</a>
-            <a href="#" class="hover:text-[#7a9b8c] transition py-1 border-b border-[#f0ede8]">Bestseller</a>
-            <a href="#" class="hover:text-[#7a9b8c] transition py-1 border-b border-[#f0ede8]">About Us</a>
-            <a href="#" class="hover:text-[#7a9b8c] transition py-1 border-b border-[#f0ede8]">Bulk Enquiry</a>
-            <a href="#" class="hover:text-[#7a9b8c] transition py-1 border-b border-[#f0ede8]">Customize</a>
-            <a href="#" class="text-[#c0392b] font-semibold hover:text-[#a03226] transition py-1 border-b border-[#f0ede8]">Sale</a>
-            <a href="#" class="hover:text-[#7a9b8c] transition py-1 border-b border-[#f0ede8]">Login</a>
+        <nav class="flex flex-col gap-3 sm:gap-4 text-base font-medium">
+            <a href="#" class="hover:text-[#7a9b8c] transition py-1.5 border-b border-[#f0ede8]">Home</a>
+            <a href="#" class="hover:text-[#7a9b8c] transition py-1.5 border-b border-[#f0ede8]">Collections</a>
+            <a href="#" class="hover:text-[#7a9b8c] transition py-1.5 border-b border-[#f0ede8]">Shop All</a>
+            <a href="#" class="hover:text-[#7a9b8c] transition py-1.5 border-b border-[#f0ede8]">Bestseller</a>
+            <a href="#" class="hover:text-[#7a9b8c] transition py-1.5 border-b border-[#f0ede8]">About Us</a>
+            <a href="#" class="hover:text-[#7a9b8c] transition py-1.5 border-b border-[#f0ede8]">Bulk Enquiry</a>
+            <a href="#" class="hover:text-[#7a9b8c] transition py-1.5 border-b border-[#f0ede8]">Customize</a>
+            <a href="#" class="text-[#c0392b] font-semibold hover:text-[#a03226] transition py-1.5 border-b border-[#f0ede8]">Sale</a>
+            <a href="#" class="hover:text-[#7a9b8c] transition py-1.5 border-b border-[#f0ede8]">Login</a>
         </nav>
-        <div class="mt-8 pt-4 border-t border-[#f0ede8]">
-            <p class="text-sm text-[#6b6b6b]">© 2026 Marmori. All rights reserved.</p>
+        <div class="mt-6 sm:mt-8 pt-4 border-t border-[#f0ede8]">
+            <p class="text-xs sm:text-sm text-[#6b6b6b]">© 2026 Marmori. All rights reserved.</p>
         </div>
     </div>
 
     <!-- ─── CART DRAWER ─── -->
     <div id="cartOverlay" class="cart-overlay fixed inset-0 bg-black/30 z-50"></div>
-    <div id="cartDrawer" class="cart-drawer fixed top-0 right-0 h-full w-full max-w-md bg-white/95 backdrop-blur-xl shadow-2xl z-50 p-6 overflow-y-auto">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="font-serif text-2xl font-semibold">Your Cart</h2>
+    <div id="cartDrawer" class="cart-drawer fixed top-0 right-0 h-full w-full max-w-md bg-white/95 backdrop-blur-xl shadow-2xl z-50 p-4 sm:p-6 overflow-y-auto">
+        <div class="flex justify-between items-center mb-5 sm:mb-6">
+            <h2 class="font-serif text-xl sm:text-2xl font-semibold">Your Cart</h2>
             <button id="closeCart" class="text-2xl text-[#1e1e1e] hover:text-[#7a9b8c] transition">
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        <div id="cartItems" class="space-y-4">
-            <!-- Cart items will be injected here -->
+        <div id="cartItems" class="space-y-3 sm:space-y-4">
             <p class="text-[#6b6b6b] text-sm">Your cart is empty.</p>
         </div>
-        <div id="cartFooter" class="hidden mt-6 pt-4 border-t border-[#f0ede8]">
-            <div class="flex justify-between font-semibold text-lg">
+        <div id="cartFooter" class="hidden mt-5 sm:mt-6 pt-4 border-t border-[#f0ede8]">
+            <div class="flex justify-between font-semibold text-base sm:text-lg">
                 <span>Total</span>
                 <span id="cartTotal">$0.00</span>
             </div>
-            <button class="w-full mt-4 bg-[#1e1e1e] text-white py-3 rounded-full font-medium hover:bg-[#3a3a3a] transition text-sm">
+            <button class="w-full mt-3 sm:mt-4 bg-[#1e1e1e] text-white py-2.5 sm:py-3 rounded-full font-medium hover:bg-[#3a3a3a] transition text-sm">
                 Checkout
             </button>
         </div>
     </div>
 
     <!-- ─── PRODUCT DETAIL MODAL ─── -->
-    <div id="detailModal" class="detail-modal fixed inset-0 z-[60] bg-black/40 flex items-center justify-center p-4">
-        <div class="modal-content bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 relative">
-            <button id="closeDetail" class="absolute top-4 right-4 text-2xl text-[#1e1e1e] hover:text-[#7a9b8c] transition">
+    <div id="detailModal" class="detail-modal fixed inset-0 z-[60] bg-black/40 flex items-center justify-center p-3 sm:p-4">
+        <div class="modal-content bg-white rounded-2xl max-w-4xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto p-4 sm:p-6 md:p-8 relative">
+            <button id="closeDetail" class="absolute top-3 right-3 sm:top-4 sm:right-4 text-2xl text-[#1e1e1e] hover:text-[#7a9b8c] transition z-10">
                 <i class="fas fa-times"></i>
             </button>
-            <div id="detailContent" class="grid md:grid-cols-2 gap-8">
-                <!-- Image -->
+            <div id="detailContent" class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                 <div>
                     <img id="detailImage" src="" alt="" class="w-full rounded-xl object-cover aspect-[4/5]" />
-                    <div class="flex gap-2 mt-3">
-                        <img src="" alt="" class="w-16 h-20 rounded-md object-cover border-2 border-transparent hover:border-[#7a9b8c] cursor-pointer transition" />
-                        <img src="" alt="" class="w-16 h-20 rounded-md object-cover border-2 border-transparent hover:border-[#7a9b8c] cursor-pointer transition" />
-                        <img src="" alt="" class="w-16 h-20 rounded-md object-cover border-2 border-transparent hover:border-[#7a9b8c] cursor-pointer transition" />
+                    <div class="flex gap-2 mt-3 overflow-x-auto pb-1">
+                        <img src="" alt="" class="w-14 h-18 sm:w-16 sm:h-20 rounded-md object-cover border-2 border-transparent hover:border-[#7a9b8c] cursor-pointer transition flex-shrink-0" />
+                        <img src="" alt="" class="w-14 h-18 sm:w-16 sm:h-20 rounded-md object-cover border-2 border-transparent hover:border-[#7a9b8c] cursor-pointer transition flex-shrink-0" />
+                        <img src="" alt="" class="w-14 h-18 sm:w-16 sm:h-20 rounded-md object-cover border-2 border-transparent hover:border-[#7a9b8c] cursor-pointer transition flex-shrink-0" />
                     </div>
                 </div>
-                <!-- Info -->
                 <div>
-                    <div class="flex items-center gap-2 mb-1">
+                    <div class="flex items-center gap-2 mb-1 flex-wrap">
                         <span class="badge-sale" id="detailBadge">Sale</span>
                         <span class="badge-save" id="detailSave">Save 25%</span>
                     </div>
-                    <h2 id="detailName" class="font-serif text-3xl font-semibold">Product Name</h2>
-                    <div class="flex items-center gap-3 mt-2">
-                        <span id="detailPrice" class="text-2xl font-bold">$2,999</span>
-                        <span id="detailOriginal" class="text-lg text-[#a0a0a0] line-through">$3,999</span>
+                    <h2 id="detailName" class="font-serif text-2xl sm:text-3xl font-semibold">Product Name</h2>
+                    <div class="flex items-center gap-3 mt-2 flex-wrap">
+                        <span id="detailPrice" class="text-xl sm:text-2xl font-bold">$2,999</span>
+                        <span id="detailOriginal" class="text-base sm:text-lg text-[#a0a0a0] line-through">$3,999</span>
                     </div>
-                    <!-- Quantity -->
                     <div class="flex items-center gap-3 mt-4">
                         <span class="text-sm font-medium">Qty</span>
                         <button class="qty-btn" id="detailQtyMinus">−</button>
                         <input type="text" id="detailQtyInput" class="qty-input" value="1" readonly />
                         <button class="qty-btn" id="detailQtyPlus">+</button>
                     </div>
-                    <!-- Buttons -->
                     <div class="flex flex-wrap gap-3 mt-5">
-                        <button id="detailAddCart" class="flex-1 min-w-[140px] border-2 border-[#1e1e1e] text-[#1e1e1e] py-3 rounded-full font-medium hover:bg-[#1e1e1e] hover:text-white transition text-sm">
+                        <button id="detailAddCart" class="flex-1 min-w-[120px] border-2 border-[#1e1e1e] text-[#1e1e1e] py-2.5 sm:py-3 rounded-full font-medium hover:bg-[#1e1e1e] hover:text-white transition text-sm">
                             Add to Cart
                         </button>
-                        <button class="flex-1 min-w-[140px] bg-[#1e1e1e] text-white py-3 rounded-full font-medium hover:bg-[#3a3a3a] transition text-sm">
+                        <button class="flex-1 min-w-[120px] bg-[#1e1e1e] text-white py-2.5 sm:py-3 rounded-full font-medium hover:bg-[#3a3a3a] transition text-sm">
                             Buy It Now
                         </button>
                     </div>
-                    <!-- Accordions -->
-                    <div class="mt-6 space-y-2">
+                    <div class="mt-5 sm:mt-6 space-y-1 sm:space-y-2">
                         <div class="border-b border-[#f0ede8]">
-                            <button class="accordion-btn flex justify-between w-full py-3 text-left font-medium text-sm hover:text-[#7a9b8c] transition">
+                            <button class="accordion-btn flex justify-between w-full py-2.5 sm:py-3 text-left font-medium text-sm hover:text-[#7a9b8c] transition">
                                 Description <i class="fas fa-chevron-down text-xs"></i>
                             </button>
                             <div class="accordion-content text-sm text-[#4a4a4a] leading-relaxed">
@@ -535,7 +796,7 @@
                             </div>
                         </div>
                         <div class="border-b border-[#f0ede8]">
-                            <button class="accordion-btn flex justify-between w-full py-3 text-left font-medium text-sm hover:text-[#7a9b8c] transition">
+                            <button class="accordion-btn flex justify-between w-full py-2.5 sm:py-3 text-left font-medium text-sm hover:text-[#7a9b8c] transition">
                                 Dimensions <i class="fas fa-chevron-down text-xs"></i>
                             </button>
                             <div class="accordion-content text-sm text-[#4a4a4a]">
@@ -543,15 +804,15 @@
                             </div>
                         </div>
                         <div class="border-b border-[#f0ede8]">
-                            <button class="accordion-btn flex justify-between w-full py-3 text-left font-medium text-sm hover:text-[#7a9b8c] transition">
-                                Additional Information <i class="fas fa-chevron-down text-xs"></i>
+                            <button class="accordion-btn flex justify-between w-full py-2.5 sm:py-3 text-left font-medium text-sm hover:text-[#7a9b8c] transition">
+                                Additional Info <i class="fas fa-chevron-down text-xs"></i>
                             </button>
                             <div class="accordion-content text-sm text-[#4a4a4a]">
                                 <p id="detailAddInfo">Hand-finished with natural wax. Each piece is unique due to natural veining.</p>
                             </div>
                         </div>
                         <div class="border-b border-[#f0ede8]">
-                            <button class="accordion-btn flex justify-between w-full py-3 text-left font-medium text-sm hover:text-[#7a9b8c] transition">
+                            <button class="accordion-btn flex justify-between w-full py-2.5 sm:py-3 text-left font-medium text-sm hover:text-[#7a9b8c] transition">
                                 Customisation <i class="fas fa-chevron-down text-xs"></i>
                             </button>
                             <div class="accordion-content text-sm text-[#4a4a4a]">
@@ -559,7 +820,7 @@
                             </div>
                         </div>
                         <div>
-                            <button class="accordion-btn flex justify-between w-full py-3 text-left font-medium text-sm hover:text-[#7a9b8c] transition">
+                            <button class="accordion-btn flex justify-between w-full py-2.5 sm:py-3 text-left font-medium text-sm hover:text-[#7a9b8c] transition">
                                 Care Instructions <i class="fas fa-chevron-down text-xs"></i>
                             </button>
                             <div class="accordion-content text-sm text-[#4a4a4a]">
@@ -573,190 +834,175 @@
     </div>
 
     <!-- ─── HERO ─── -->
-    <section class="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden">
+    <section class="relative hero-container overflow-hidden">
         <div class="absolute inset-0 bg-[#1e1e1e]">
-            <img
-            src="https://images.unsplash.com/photo-1618220179428-22790b461013?w=1400&q=80"
-            alt="Luxury marble interior"
-            class="w-full h-full object-cover opacity-80"
-            loading="eager"
-            />
+            <img src="https://images.unsplash.com/photo-1618220179428-22790b461013?w=1400&q=80" alt="Luxury marble interior" class="w-full h-full object-cover opacity-80" loading="eager" />
             <div class="hero-overlay absolute inset-0"></div>
         </div>
         <div class="relative z-10 text-center text-white px-4 max-w-3xl" data-aos="fade-up" data-aos-duration="1000">
-            <h1 class="font-serif text-4xl md:text-6xl lg:text-7xl font-bold leading-tight">
+            <h1 class="font-serif hero-title text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
                 Where Stone<br />Becomes Art
             </h1>
-            <p class="mt-4 text-base md:text-lg text-white/80 font-light tracking-wide max-w-xl mx-auto">
-                Handcrafted marble furniture &amp; decor — each piece a timeless statement of nature’s beauty.
+            <p class="mt-3 sm:mt-4 hero-sub text-sm sm:text-base md:text-lg text-white/80 font-light tracking-wide max-w-xl mx-auto px-2">
+                Handcrafted marble furniture &amp; decor — each piece a timeless statement of nature's beauty.
             </p>
-            <a href="#" class="inline-block mt-8 bg-white/10 backdrop-blur-sm border border-white/30 text-white px-8 py-3.5 rounded-full font-medium hover:bg-white hover:text-[#1e1e1e] transition-all duration-300 text-sm tracking-wide">
+            <a href="#" class="inline-block mt-6 sm:mt-8 bg-white/10 backdrop-blur-sm border border-white/30 text-white px-6 sm:px-8 py-3 sm:py-3.5 rounded-full font-medium hover:bg-white hover:text-[#1e1e1e] transition-all duration-300 text-sm tracking-wide">
                 Explore Collection
             </a>
         </div>
-        <!-- Scroll indicator -->
-        <div class="scroll-indicator absolute bottom-8 left-1/2 -translate-x-1/2 text-white/60 flex flex-col items-center gap-1 text-sm font-light tracking-widest">
+        <div class="scroll-indicator absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 text-white/60 flex flex-col items-center gap-1 text-xs sm:text-sm font-light tracking-widest">
             <span>SCROLL</span>
             <i class="fas fa-chevron-down text-xs"></i>
         </div>
     </section>
 
     <!-- ─── BESTSELLERS ─── -->
-    <section class="py-16 md:py-24 px-4 max-w-7xl mx-auto">
-        <div class="flex justify-between items-end mb-10" data-aos="fade-up">
+    <section class="py-12 sm:py-16 md:py-24 px-3 sm:px-4 max-w-7xl mx-auto">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 sm:mb-10 gap-2" data-aos="fade-up">
             <div>
-                <span class="text-sm font-medium text-[#7a9b8c] tracking-widest uppercase">Curated</span>
-                <h2 class="font-serif text-3xl md:text-4xl font-semibold mt-1">Bestsellers</h2>
+                <span class="text-xs sm:text-sm font-medium text-[#7a9b8c] tracking-widest uppercase">Curated</span>
+                <h2 class="font-serif text-2xl sm:text-3xl md:text-4xl font-semibold mt-0.5 sm:mt-1">Bestsellers</h2>
             </div>
             <a href="#" class="text-sm font-medium text-[#1e1e1e] hover:text-[#7a9b8c] transition flex items-center gap-1">
                 View All <i class="fas fa-arrow-right text-xs"></i>
             </a>
         </div>
-        <div id="bestsellerGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div id="bestsellerGrid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
             <!-- Injected by JS -->
         </div>
     </section>
 
     <!-- ─── SHOP BY CATEGORY ─── -->
-    <section class="py-16 md:py-24 px-4 bg-[#f5f2ed]">
+    <section class="py-12 sm:py-16 md:py-24 px-3 sm:px-4 bg-[#f5f2ed]">
         <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-12" data-aos="fade-up">
-                <span class="text-sm font-medium text-[#7a9b8c] tracking-widest uppercase">Explore</span>
-                <h2 class="font-serif text-3xl md:text-4xl font-semibold mt-1">Shop by Category</h2>
+            <div class="text-center mb-8 sm:mb-10 md:mb-12" data-aos="fade-up">
+                <span class="text-xs sm:text-sm font-medium text-[#7a9b8c] tracking-widest uppercase">Explore</span>
+                <h2 class="font-serif text-2xl sm:text-3xl md:text-4xl font-semibold mt-0.5 sm:mt-1">Shop by Category</h2>
             </div>
-            <div id="categoryGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
+            <div id="categoryGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6">
                 <!-- Injected by JS -->
             </div>
         </div>
     </section>
 
     <!-- ─── TYPES OF MARBLE ─── -->
-    <section class="py-16 md:py-24 px-4 max-w-7xl mx-auto overflow-hidden">
-        <div class="flex justify-between items-end mb-10" data-aos="fade-up">
+    <section class="py-12 sm:py-16 md:py-24 px-3 sm:px-4 max-w-7xl mx-auto overflow-hidden">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 sm:mb-10 gap-3" data-aos="fade-up">
             <div>
-                <span class="text-sm font-medium text-[#7a9b8c] tracking-widest uppercase">Materials</span>
-                <h2 class="font-serif text-3xl md:text-4xl font-semibold mt-1">Types of Marble</h2>
+                <span class="text-xs sm:text-sm font-medium text-[#7a9b8c] tracking-widest uppercase">Materials</span>
+                <h2 class="font-serif text-2xl sm:text-3xl md:text-4xl font-semibold mt-0.5 sm:mt-1">Types of Marble</h2>
             </div>
-            <div class="flex gap-2">
-                <button id="marblePrev" class="w-10 h-10 rounded-full border border-[#d4d0cb] hover:bg-[#1e1e1e] hover:text-white hover:border-[#1e1e1e] transition flex items-center justify-center">
-                    <i class="fas fa-chevron-left text-sm"></i>
+            <div class="flex gap-2 self-end sm:self-auto">
+                <button id="marblePrev" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-[#d4d0cb] hover:bg-[#1e1e1e] hover:text-white hover:border-[#1e1e1e] transition flex items-center justify-center">
+                    <i class="fas fa-chevron-left text-xs sm:text-sm"></i>
                 </button>
-                <button id="marbleNext" class="w-10 h-10 rounded-full border border-[#d4d0cb] hover:bg-[#1e1e1e] hover:text-white hover:border-[#1e1e1e] transition flex items-center justify-center">
-                    <i class="fas fa-chevron-right text-sm"></i>
+                <button id="marbleNext" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-[#d4d0cb] hover:bg-[#1e1e1e] hover:text-white hover:border-[#1e1e1e] transition flex items-center justify-center">
+                    <i class="fas fa-chevron-right text-xs sm:text-sm"></i>
                 </button>
             </div>
         </div>
-        <div class="relative overflow-hidden" data-aos="fade-up">
-            <div id="marbleTrack" class="marble-track gap-4">
+        <div class="marble-carousel-wrapper" data-aos="fade-up">
+            <div id="marbleTrack" class="marble-track gap-2 sm:gap-3 md:gap-4">
                 <!-- Injected by JS -->
             </div>
         </div>
     </section>
 
     <!-- ─── ABOUT / CRAFTSMANSHIP ─── -->
-    <section class="py-16 md:py-24 px-4 bg-[#1e1e1e] text-white">
-        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+    <section class="py-12 sm:py-16 md:py-24 px-3 sm:px-4 bg-[#1e1e1e] text-white">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 sm:gap-10 md:gap-12 items-center">
             <div data-aos="fade-right">
-                <span class="text-sm font-medium text-[#7a9b8c] tracking-widest uppercase">Craftsmanship</span>
-                <h2 class="font-serif text-3xl md:text-4xl font-semibold mt-2 leading-tight">
+                <span class="text-xs sm:text-sm font-medium text-[#7a9b8c] tracking-widest uppercase">Craftsmanship</span>
+                <h2 class="font-serif text-2xl sm:text-3xl md:text-4xl font-semibold mt-2 leading-tight">
                     Carved by Hand,<br />Made to Last
                 </h2>
-                <p class="mt-4 text-white/70 leading-relaxed text-sm md:text-base">
+                <p class="mt-3 sm:mt-4 text-white/70 leading-relaxed text-sm sm:text-base">
                     Every piece of Marmori furniture is handcrafted by master artisans in our workshop. We source only the finest natural stone — from Italian Carrara to Portuguese Rosa — and treat each block with the reverence it deserves. No mass production. No compromise.
                 </p>
-                <div class="mt-6 grid grid-cols-2 gap-4">
+                <div class="mt-5 sm:mt-6 grid grid-cols-2 gap-3 sm:gap-4">
                     <div>
-                        <span class="text-2xl font-serif font-bold text-[#7a9b8c]">200+</span>
+                        <span class="text-xl sm:text-2xl font-serif font-bold text-[#7a9b8c]">200+</span>
                         <p class="text-xs text-white/50">Years of combined experience</p>
                     </div>
                     <div>
-                        <span class="text-2xl font-serif font-bold text-[#7a9b8c]">100%</span>
+                        <span class="text-xl sm:text-2xl font-serif font-bold text-[#7a9b8c]">100%</span>
                         <p class="text-xs text-white/50">Natural stone, no composites</p>
                     </div>
                 </div>
             </div>
-            <div class="grid grid-cols-2 gap-3" data-aos="fade-left">
-                <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&q=80" alt="Craftsmanship" class="rounded-xl w-full h-48 object-cover" />
-                <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=400&q=80" alt="Workshop" class="rounded-xl w-full h-48 object-cover mt-6" />
-                <img src="https://images.unsplash.com/photo-1618220179428-22790b461013?w=400&q=80" alt="Marble" class="rounded-xl w-full h-48 object-cover -mt-6" />
-                <img src="https://images.unsplash.com/photo-1616137466211-f939a420be84?w=400&q=80" alt="Finished" class="rounded-xl w-full h-48 object-cover" />
+            <div class="grid grid-cols-2 gap-2 sm:gap-3" data-aos="fade-left">
+                <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&q=80" alt="Craftsmanship" class="rounded-xl w-full h-40 sm:h-44 md:h-48 object-cover" />
+                <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=400&q=80" alt="Workshop" class="rounded-xl w-full h-40 sm:h-44 md:h-48 object-cover mt-4 sm:mt-6" />
+                <img src="https://images.unsplash.com/photo-1618220179428-22790b461013?w=400&q=80" alt="Marble" class="rounded-xl w-full h-40 sm:h-44 md:h-48 object-cover -mt-4 sm:-mt-6" />
+                <img src="https://images.unsplash.com/photo-1616137466211-f939a420be84?w=400&q=80" alt="Finished" class="rounded-xl w-full h-40 sm:h-44 md:h-48 object-cover" />
             </div>
         </div>
-        <!-- Founders -->
-        <div class="max-w-7xl mx-auto mt-16 pt-12 border-t border-white/10">
-            <h3 class="font-serif text-2xl font-semibold text-center mb-10" data-aos="fade-up">Meet the Founders</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+        <div class="max-w-7xl mx-auto mt-12 sm:mt-16 pt-10 sm:pt-12 border-t border-white/10">
+            <h3 class="font-serif text-xl sm:text-2xl font-semibold text-center mb-8 sm:mb-10" data-aos="fade-up">Meet the Founders</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
                 <div class="text-center" data-aos="fade-up" data-aos-delay="0">
-                    <div class="w-24 h-24 rounded-full bg-[#7a9b8c] mx-auto mb-3 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80" alt="Founder" class="w-full h-full object-cover" />
-                    </div>
-                    <h4 class="font-semibold">Elena Rossi</h4>
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80" alt="Founder" class="founder-img" />
+                    <h4 class="font-semibold text-base sm:text-lg">Elena Rossi</h4>
                     <p class="text-sm text-white/60">Creative Director</p>
                 </div>
                 <div class="text-center" data-aos="fade-up" data-aos-delay="100">
-                    <div class="w-24 h-24 rounded-full bg-[#7a9b8c] mx-auto mb-3 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80" alt="Founder" class="w-full h-full object-cover" />
-                    </div>
-                    <h4 class="font-semibold">Marco Bianchi</h4>
+                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80" alt="Founder" class="founder-img" />
+                    <h4 class="font-semibold text-base sm:text-lg">Marco Bianchi</h4>
                     <p class="text-sm text-white/60">Master Stone Carver</p>
                 </div>
                 <div class="text-center" data-aos="fade-up" data-aos-delay="200">
-                    <div class="w-24 h-24 rounded-full bg-[#7a9b8c] mx-auto mb-3 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=80" alt="Founder" class="w-full h-full object-cover" />
-                    </div>
-                    <h4 class="font-semibold">Sophia Chen</h4>
+                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=80" alt="Founder" class="founder-img" />
+                    <h4 class="font-semibold text-base sm:text-lg">Sophia Chen</h4>
                     <p class="text-sm text-white/60">Head of Design</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ─── TESTIMONIALS / TRUST BADGES ─── -->
-    <section class="py-16 md:py-20 px-4 max-w-6xl mx-auto">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center" data-aos="fade-up">
+    <!-- ─── TRUST BADGES ─── -->
+    <section class="py-12 sm:py-16 md:py-20 px-3 sm:px-4 max-w-6xl mx-auto">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 text-center" data-aos="fade-up">
             <div class="flex flex-col items-center">
                 <i class="fas fa-gem trust-icon"></i>
-                <p class="font-semibold mt-2 text-sm">100% Natural Stone</p>
+                <p class="font-semibold mt-2 text-xs sm:text-sm">100% Natural Stone</p>
                 <p class="text-xs text-[#6b6b6b]">No resins or fillers</p>
             </div>
             <div class="flex flex-col items-center">
                 <i class="fas fa-hands trust-icon"></i>
-                <p class="font-semibold mt-2 text-sm">Handcrafted</p>
+                <p class="font-semibold mt-2 text-xs sm:text-sm">Handcrafted</p>
                 <p class="text-xs text-[#6b6b6b]">Made by master artisans</p>
             </div>
             <div class="flex flex-col items-center">
                 <i class="fas fa-ban trust-icon"></i>
-                <p class="font-semibold mt-2 text-sm">No Mass Production</p>
+                <p class="font-semibold mt-2 text-xs sm:text-sm">No Mass Production</p>
                 <p class="text-xs text-[#6b6b6b]">Each piece is unique</p>
             </div>
             <div class="flex flex-col items-center">
                 <i class="fas fa-leaf trust-icon"></i>
-                <p class="font-semibold mt-2 text-sm">Sustainably Sourced</p>
+                <p class="font-semibold mt-2 text-xs sm:text-sm">Sustainably Sourced</p>
                 <p class="text-xs text-[#6b6b6b]">Ethical quarries</p>
             </div>
         </div>
     </section>
 
     <!-- ─── FOOTER ─── -->
-    <footer class="bg-[#1e1e1e] text-white/80 pt-16 pb-6 px-4">
-        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-            <!-- Brand -->
+    <footer class="bg-[#1e1e1e] text-white/80 pt-12 sm:pt-16 pb-4 sm:pb-6 px-3 sm:px-4">
+        <div class="max-w-7xl mx-auto footer-grid">
             <div>
-                <a href="#" class="font-serif text-2xl font-bold text-white">M A R M O R I</a>
-                <p class="mt-3 text-sm text-white/50 leading-relaxed">
+                <a href="#" class="font-serif text-xl sm:text-2xl font-bold text-white">M A R M O R I</a>
+                <p class="mt-2 sm:mt-3 text-sm text-white/50 leading-relaxed">
                     Luxury marble furniture &amp; decor, handcrafted in Italy. Timeless design, natural beauty.
                 </p>
-                <div class="flex gap-4 mt-4">
-                    <a href="#" class="text-white/40 hover:text-white transition text-lg"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="text-white/40 hover:text-white transition text-lg"><i class="fab fa-pinterest"></i></a>
-                    <a href="#" class="text-white/40 hover:text-white transition text-lg"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="text-white/40 hover:text-white transition text-lg"><i class="fab fa-youtube"></i></a>
+                <div class="flex gap-3 sm:gap-4 mt-3 sm:mt-4">
+                    <a href="#" class="text-white/40 hover:text-white transition text-base sm:text-lg"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-white/40 hover:text-white transition text-base sm:text-lg"><i class="fab fa-pinterest"></i></a>
+                    <a href="#" class="text-white/40 hover:text-white transition text-base sm:text-lg"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-white/40 hover:text-white transition text-base sm:text-lg"><i class="fab fa-youtube"></i></a>
                 </div>
             </div>
-            <!-- Quick links -->
             <div>
-                <h4 class="font-semibold text-white text-sm uppercase tracking-wider">Quick Links</h4>
-                <ul class="mt-3 space-y-2 text-sm">
+                <h4 class="font-semibold text-white text-xs sm:text-sm uppercase tracking-wider">Quick Links</h4>
+                <ul class="mt-2 sm:mt-3 space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
                     <li><a href="#" class="hover:text-white transition">Shop All</a></li>
                     <li><a href="#" class="hover:text-white transition">Bestsellers</a></li>
                     <li><a href="#" class="hover:text-white transition">About Us</a></li>
@@ -764,10 +1010,9 @@
                     <li><a href="#" class="hover:text-white transition">Customize</a></li>
                 </ul>
             </div>
-            <!-- Collections -->
             <div>
-                <h4 class="font-semibold text-white text-sm uppercase tracking-wider">Collections</h4>
-                <ul class="mt-3 space-y-2 text-sm">
+                <h4 class="font-semibold text-white text-xs sm:text-sm uppercase tracking-wider">Collections</h4>
+                <ul class="mt-2 sm:mt-3 space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
                     <li><a href="#" class="hover:text-white transition">Side Tables</a></li>
                     <li><a href="#" class="hover:text-white transition">Vases</a></li>
                     <li><a href="#" class="hover:text-white transition">Candle Holders</a></li>
@@ -775,22 +1020,20 @@
                     <li><a href="#" class="hover:text-white transition">Tissue Holders</a></li>
                 </ul>
             </div>
-            <!-- Newsletter -->
             <div>
-                <h4 class="font-semibold text-white text-sm uppercase tracking-wider">Newsletter</h4>
-                <p class="mt-2 text-sm text-white/50">Subscribe for new arrivals &amp; exclusive offers.</p>
-                <form class="mt-3 flex flex-col gap-2">
-                    <input type="email" placeholder="Your email" class="bg-white/10 border border-white/10 rounded-full px-4 py-2.5 text-sm text-white placeholder-white/40 focus:outline-none focus:border-[#7a9b8c]" />
-                    <button type="submit" class="bg-[#7a9b8c] text-white py-2.5 rounded-full text-sm font-medium hover:bg-[#6a8b7c] transition">
+                <h4 class="font-semibold text-white text-xs sm:text-sm uppercase tracking-wider">Newsletter</h4>
+                <p class="mt-1.5 sm:mt-2 text-xs sm:text-sm text-white/50">Subscribe for new arrivals &amp; exclusive offers.</p>
+                <form class="mt-2 sm:mt-3 flex flex-col gap-2">
+                    <input type="email" placeholder="Your email" class="newsletter-input text-xs sm:text-sm" />
+                    <button type="submit" class="bg-[#7a9b8c] text-white py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium hover:bg-[#6a8b7c] transition">
                         Subscribe
                     </button>
                 </form>
             </div>
         </div>
-        <!-- Bottom -->
-        <div class="max-w-7xl mx-auto mt-12 pt-6 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/30">
+        <div class="max-w-7xl mx-auto mt-10 sm:mt-12 pt-5 sm:pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 text-xs text-white/30">
             <span>© 2026 Marmori. All rights reserved.</span>
-            <div class="flex items-center gap-4 text-lg">
+            <div class="payment-icons">
                 <i class="fab fa-cc-visa"></i>
                 <i class="fab fa-cc-mastercard"></i>
                 <i class="fab fa-cc-amex"></i>
@@ -923,8 +1166,6 @@
 
         // ─── DOM REFS ───
         const $ = (s) => document.querySelector(s);
-        const $$ = (s) => document.querySelectorAll(s);
-
         const navbar = $('#navbar');
         const menuToggle = $('#menuToggle');
         const closeMenu = $('#closeMenu');
@@ -954,21 +1195,20 @@
               <div class="product-card group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 cursor-pointer" data-id="${p.id}" data-aos="fade-up" data-aos-delay="${idx * 80}">
                 <div class="relative overflow-hidden bg-[#f5f2ed] aspect-[4/5]">
                   <img src="${p.image}" alt="${p.name}" class="product-image w-full h-full object-cover" loading="lazy" />
-                  ${p.badge ? `<span class="badge-sale absolute top-3 left-3">${p.badge}</span>` : ''}
-                  ${p.save ? `<span class="badge-save absolute top-3 right-3">Save ${p.save}</span>` : ''}
+                  ${p.badge ? `<span class="badge-sale absolute top-2 left-2 sm:top-3 sm:left-3 text-[10px] sm:text-xs">${p.badge}</span>` : ''}
+                  ${p.save ? `<span class="badge-save absolute top-2 right-2 sm:top-3 sm:right-3 text-[9px] sm:text-xs">Save ${p.save}</span>` : ''}
                 </div>
-                <div class="p-4">
-                  <p class="text-xs text-[#7a9b8c] font-medium uppercase tracking-wider">${p.category.replace('-', ' ')}</p>
-                  <h3 class="font-serif text-lg font-semibold mt-0.5 truncate-2">${p.name}</h3>
-                  <div class="flex items-center gap-2 mt-1.5">
-                    <span class="font-bold text-[#1e1e1e]">$${p.price.toLocaleString()}</span>
-                    ${p.originalPrice ? `<span class="text-sm text-[#a0a0a0] line-through">$${p.originalPrice.toLocaleString()}</span>` : ''}
+                <div class="p-3 sm:p-4">
+                  <p class="text-[10px] sm:text-xs text-[#7a9b8c] font-medium uppercase tracking-wider">${p.category.replace('-', ' ')}</p>
+                  <h3 class="font-serif text-base sm:text-lg font-semibold mt-0.5 truncate-2">${p.name}</h3>
+                  <div class="flex items-center gap-2 mt-1 sm:mt-1.5 flex-wrap">
+                    <span class="font-bold text-[#1e1e1e] text-sm sm:text-base">$${p.price.toLocaleString()}</span>
+                    ${p.originalPrice ? `<span class="text-xs sm:text-sm text-[#a0a0a0] line-through">$${p.originalPrice.toLocaleString()}</span>` : ''}
                   </div>
                 </div>
               </div>
             `).join('');
 
-            // Click → detail modal
             bestsellerGrid.querySelectorAll('.product-card').forEach(el => {
                 el.addEventListener('click', () => openDetail(parseInt(el.dataset.id)));
             });
@@ -980,42 +1220,58 @@
               <div class="category-tile relative rounded-xl overflow-hidden aspect-[4/5] cursor-pointer group" data-aos="fade-up" data-aos-delay="${idx * 60}">
                 <img src="${c.image}" alt="${c.name}" class="cat-image w-full h-full object-cover transition-transform duration-600" loading="lazy" />
                 <div class="cat-overlay absolute inset-0 bg-black/40 flex items-center justify-center">
-                  <span class="text-white font-serif text-lg md:text-xl font-semibold tracking-wide">${c.name}</span>
+                  <span class="text-white font-serif text-base sm:text-lg md:text-xl font-semibold tracking-wide px-2 text-center">${c.name}</span>
                 </div>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-                <div class="absolute bottom-4 left-4">
-                  <span class="text-white/90 text-sm font-medium">${c.name}</span>
-                </div>
+                <div class="cat-label">${c.name}</div>
               </div>
             `).join('');
         }
 
         // ─── RENDER MARBLE CAROUSEL ───
         function renderMarble() {
-            const visible = window.innerWidth < 480 ? 2 : window.innerWidth < 768 ? 3 : 5;
+            const w = window.innerWidth;
+            let visible = 5;
+            if (w < 480) visible = 2;
+            else if (w < 640) visible = 2.5;
+            else if (w < 768) visible = 3;
+            else if (w < 1024) visible = 4;
+
             const total = marbleTypes.length;
-            const maxIndex = Math.max(0, total - visible);
+            const maxIndex = Math.max(0, Math.ceil(total - visible));
             marbleIndex = Math.min(marbleIndex, maxIndex);
             marbleIndex = Math.max(marbleIndex, 0);
 
-            const items = marbleTypes.map((m, i) => `
-              <div class="marble-item flex flex-col items-center gap-2 px-1">
-                <div class="w-full aspect-square rounded-full border-4 border-white shadow-lg" style="background: ${m.color};"></div>
-                <p class="text-sm font-medium text-center">${m.name}</p>
+            const items = marbleTypes.map((m) => `
+              <div class="marble-item flex flex-col items-center gap-1.5 sm:gap-2">
+                <div class="w-full aspect-square rounded-full border-2 sm:border-4 border-white shadow-lg" style="background: ${m.color};"></div>
+                <p class="text-[10px] sm:text-sm font-medium text-center leading-tight">${m.name}</p>
               </div>
             `).join('');
 
             marbleTrack.innerHTML = items;
-            const itemWidth = marbleTrack.querySelector('.marble-item')?.offsetWidth || 180;
-            const gap = 16;
-            const offset = marbleIndex * (itemWidth + gap);
-            marbleTrack.style.transform = `translateX(-${offset}px)`;
+
+            const firstItem = marbleTrack.querySelector('.marble-item');
+            if (firstItem) {
+                const itemWidth = firstItem.offsetWidth || 140;
+                const gap = parseInt(getComputedStyle(marbleTrack).gap) || 12;
+                const offset = marbleIndex * (itemWidth + gap);
+                marbleTrack.style.transform = `translateX(-${offset}px)`;
+            } else {
+                marbleTrack.style.transform = 'translateX(0)';
+            }
         }
 
         function marbleSlide(dir) {
-            const visible = window.innerWidth < 480 ? 2 : window.innerWidth < 768 ? 3 : 5;
+            const w = window.innerWidth;
+            let visible = 5;
+            if (w < 480) visible = 2;
+            else if (w < 640) visible = 2.5;
+            else if (w < 768) visible = 3;
+            else if (w < 1024) visible = 4;
+
             const total = marbleTypes.length;
-            const maxIndex = Math.max(0, total - visible);
+            const maxIndex = Math.max(0, Math.ceil(total - visible));
             marbleIndex = Math.min(Math.max(marbleIndex + dir, 0), maxIndex);
             renderMarble();
         }
@@ -1038,16 +1294,16 @@
                 const subtotal = p.price * item.qty;
                 total += subtotal;
                 html += `
-                  <div class="flex gap-3 items-center border-b border-[#f0ede8] pb-3">
-                    <img src="${p.image}" alt="${p.name}" class="w-16 h-20 rounded-md object-cover" />
-                    <div class="flex-1">
-                      <h4 class="font-semibold text-sm">${p.name}</h4>
-                      <p class="text-sm font-bold">$${p.price.toLocaleString()}</p>
-                      <div class="flex items-center gap-2 mt-1">
-                        <button class="cart-qty-minus text-xs w-6 h-6 rounded-full border border-[#d4d0cb] hover:bg-[#1e1e1e] hover:text-white transition" data-idx="${idx}">−</button>
-                        <span class="text-sm font-medium w-6 text-center">${item.qty}</span>
-                        <button class="cart-qty-plus text-xs w-6 h-6 rounded-full border border-[#d4d0cb] hover:bg-[#1e1e1e] hover:text-white transition" data-idx="${idx}">+</button>
-                        <button class="cart-remove text-xs text-[#c0392b] hover:text-[#a03226] ml-2" data-idx="${idx}"><i class="fas fa-trash-alt"></i></button>
+                  <div class="cart-item-grid border-b border-[#f0ede8] pb-3">
+                    <img src="${p.image}" alt="${p.name}" class="w-14 sm:w-16 h-18 sm:h-20 rounded-md object-cover" />
+                    <div class="flex-1 min-w-0">
+                      <h4 class="font-semibold text-xs sm:text-sm truncate">${p.name}</h4>
+                      <p class="text-xs sm:text-sm font-bold">$${p.price.toLocaleString()}</p>
+                      <div class="flex items-center gap-1 sm:gap-2 mt-1 flex-wrap">
+                        <button class="cart-qty-minus text-xs w-6 h-6 rounded-full border border-[#d4d0cb] hover:bg-[#1e1e1e] hover:text-white transition flex items-center justify-center" data-idx="${idx}">−</button>
+                        <span class="text-xs sm:text-sm font-medium w-5 sm:w-6 text-center">${item.qty}</span>
+                        <button class="cart-qty-plus text-xs w-6 h-6 rounded-full border border-[#d4d0cb] hover:bg-[#1e1e1e] hover:text-white transition flex items-center justify-center" data-idx="${idx}">+</button>
+                        <button class="cart-remove text-[#c0392b] hover:text-[#a03226] ml-1 sm:ml-2" data-idx="${idx}"><i class="fas fa-trash-alt text-xs sm:text-sm"></i></button>
                       </div>
                     </div>
                   </div>
@@ -1056,7 +1312,6 @@
             cartItems.innerHTML = html;
             cartTotal.textContent = `$${total.toLocaleString()}`;
 
-            // Event listeners for cart actions
             cartItems.querySelectorAll('.cart-qty-minus').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const idx = parseInt(btn.dataset.idx);
@@ -1088,7 +1343,6 @@
                 cart.push({ id: productId, qty });
             }
             updateCartUI();
-            // Open cart drawer
             cartDrawer.classList.add('open');
             cartOverlay.classList.add('open');
         }
@@ -1100,9 +1354,8 @@
             currentProductId = id;
             detailQty = 1;
 
-            const img = document.getElementById('detailImage');
-            img.src = p.image;
-            img.alt = p.name;
+            document.getElementById('detailImage').src = p.image;
+            document.getElementById('detailImage').alt = p.name;
             document.getElementById('detailName').textContent = p.name;
             document.getElementById('detailPrice').textContent = `$${p.price.toLocaleString()}`;
             document.getElementById('detailOriginal').textContent = p.originalPrice ? `$${p.originalPrice.toLocaleString()}` : '';
@@ -1115,7 +1368,6 @@
             document.getElementById('detailDims').textContent = p.dims;
             document.getElementById('detailAddInfo').textContent = p.addInfo || '—';
             document.getElementById('detailCare').textContent = p.care || '—';
-
             document.getElementById('detailQtyInput').value = detailQty;
             detailModal.classList.add('open');
             document.body.style.overflow = 'hidden';
@@ -1127,12 +1379,10 @@
         }
 
         // ─── NAVBAR SCROLL ───
-        let lastScroll = 0;
         window.addEventListener('scroll', () => {
             const y = window.scrollY;
             navbar.classList.toggle('scrolled', y > 60);
             scrollTopBtn.classList.toggle('visible', y > 400);
-            lastScroll = y;
         });
 
         // ─── MOBILE MENU ───
@@ -1186,23 +1436,26 @@
         // ─── MARBLE CAROUSEL ───
         marblePrev.addEventListener('click', () => marbleSlide(-1));
         marbleNext.addEventListener('click', () => marbleSlide(1));
-        window.addEventListener('resize', () => { renderMarble(); });
 
-        // ─── SEARCH (placeholder) ───
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(renderMarble, 150);
+        });
+
+        // ─── SEARCH ───
         document.getElementById('searchToggle').addEventListener('click', () => alert('Search functionality coming soon.'));
         document.getElementById('searchToggleMobile').addEventListener('click', () => alert('Search functionality coming soon.'));
 
-        // ─── LOGIN (placeholder) ───
+        // ─── LOGIN ───
         document.getElementById('loginToggle').addEventListener('click', () => alert('Login / Account page coming soon.'));
 
-        // ─── ACCORDIONS (global) ───
+        // ─── ACCORDIONS ───
         document.addEventListener('click', (e) => {
             const btn = e.target.closest('.accordion-btn');
             if (!btn) return;
             const content = btn.nextElementSibling;
-            const isOpen = content.classList.contains('open');
-            // Close siblings within same parent
-            const parent = btn.closest('.space-y-2') || btn.parentElement;
+            const parent = btn.closest('.space-y-1') || btn.closest('.space-y-2') || btn.parentElement;
             parent.querySelectorAll('.accordion-content').forEach(c => {
                 if (c !== content) {
                     c.classList.remove('open');
@@ -1216,10 +1469,10 @@
         // ─── INIT ───
         renderBestsellers();
         renderCategories();
-        renderMarble();
+        setTimeout(renderMarble, 100);
         updateCartUI();
 
-        // ─── KEYBOARD: ESC to close modals ───
+        // ─── KEYBOARD: ESC ───
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeDetailModal();
@@ -1229,7 +1482,8 @@
             }
         });
 
-        console.log('🪨 Marmori — Luxury marble furniture brand demo ready.');
+        console.log('🪨 Marmori — Fully responsive luxury marble brand.');
     </script>
 </body>
 </html>
+```
